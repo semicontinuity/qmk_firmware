@@ -14,6 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "casemodes.h"
 #include <stdio.h>
 
 enum {
@@ -32,6 +33,7 @@ enum layer_id {
   S_RAISE,
   RUSSIAN, // phonetic engram
 };
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [ENGRAM] = LAYOUT_split_3x6_3(
   //,---------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
@@ -205,7 +207,9 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
         case TD_SINGLE_TAP:   set_oneshot_layer(SHIFT, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
         case TD_SINGLE_HOLD:  layer_on(SHIFT); break;
         case TD_DOUBLE_TAP:
-            tap_code(KC_CAPS);
+            toggle_caps_word();
+//            tap_code(KC_CAPS);
+//
 //            if (layer_state_is(SHIFT)) {
 //                layer_off(SHIFT);
 //            } else {
@@ -240,9 +244,13 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    uprintf("process_record_user\n");
-    uint8_t mod_state = get_mods();
-    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
+//    uprintf("process_record_user\n");
+//    uint8_t mod_state = get_mods();
+//    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
+    if (!process_case_modes(keycode, record)) {
+        return false;
+    }
+
     switch (keycode) {
 
     case KC_TRNS:
