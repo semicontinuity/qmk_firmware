@@ -24,6 +24,7 @@ enum {
 enum layer_id {
   ENGRAM,
   QWERTY,
+  S_QWERTY,
   RAISE,
   MULTI,
   MOUSE,
@@ -49,11 +50,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [QWERTY] = LAYOUT_split_3x6_3(
   //,---------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
-      _______,     KC_Q,         KC_W,         KC_E,         KC_R,               KC_T,                                                   KC_Y,               KC_U,             KC_I,          KC_O,          KC_P,           KC_RALT,
+      _______,     KC_Q,         KC_W,         KC_E,         KC_R,               KC_T,                                                   KC_Y,               KC_U,             KC_I,          KC_O,          KC_P,           _______,
   //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
       _______,     KC_A,         LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F),       KC_G,                                                   KC_H,               RSFT_T(KC_J),     RCTL_T(KC_K),  LALT_T(KC_L),  RGUI_T(KC_SCLN),_______,
   //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
-      _______,     KC_Z,         KC_X,         KC_C,         KC_V,               KC_B,                                                   KC_N,               KC_M,             KC_COMM,       RALT_T(KC_DOT),KC_SLSH,        _______,
+      _______,     KC_Z,         KC_X,         KC_C,         KC_V,               KC_B,                                                   KC_N,               KC_M,             KC_COMM,       RALT_T(KC_DOT),KC_DQUO,        _______,
+  //|------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
+                                                             _______,            _______,     _______,               _______,            _______,            _______
+                                                         //`--------------------------------------------------'  `---------------------------------------------------------'
+  ),
+
+  [S_QWERTY] = LAYOUT_split_3x6_3(
+  //,---------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
+      _______,     S(KC_Q),      S(KC_W),      S(KC_E),      S(KC_R),            S(KC_T),                                                S(KC_Y),             S(KC_U),         S(KC_I),       S(KC_O),       S(KC_P),        _______,
+  //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
+      _______,     S(KC_A),      S(KC_S),      S(KC_D),      S(KC_F),            S(KC_G),                                                S(KC_H),             S(KC_J),         S(KC_K),       S(KC_L),       S(KC_SCLN),     _______,
+  //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
+      _______,     S(KC_Z),      S(KC_X),      S(KC_C),      S(KC_V),            S(KC_B),                                                S(KC_N),             S(KC_M),         KC_QUES,       KC_UNDS,       KC_QUOTE,       _______,
   //|------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
                                                              _______,            _______,     _______,               _______,            _______,            _______
                                                          //`--------------------------------------------------'  `---------------------------------------------------------'
@@ -204,16 +217,22 @@ static td_tap_t ql_tap_state = {
 void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
-        case TD_SINGLE_TAP:   set_oneshot_layer(SHIFT, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
-        case TD_SINGLE_HOLD:  layer_on(SHIFT); break;
+        case TD_SINGLE_TAP:
+            if (layer_state_is(QWERTY)) {
+                set_oneshot_layer(S_QWERTY, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED);
+            } else {
+                set_oneshot_layer(SHIFT, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED);
+            }
+            break;
+        case TD_SINGLE_HOLD:
+            if (layer_state_is(QWERTY)) {
+                layer_on(S_QWERTY);
+            } else {
+                layer_on(SHIFT);
+            }
+            break;
         case TD_DOUBLE_TAP:
             toggle_caps_word();
-//            tap_code(KC_CAPS);
-//
-//            if (layer_state_is(SHIFT)) {
-//                layer_off(SHIFT);
-//            } else {
-//                layer_on(SHIFT);
             break;
         case TD_NONE:
         case TD_UNKNOWN:
@@ -224,13 +243,17 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:   break;
-        case TD_SINGLE_HOLD:  layer_off(SHIFT); break;
+        case TD_SINGLE_HOLD:
+            if (layer_state_is(QWERTY)) {
+                layer_off(S_QWERTY);
+            } else {
+                layer_off(SHIFT);
+            }
+            break;
         case TD_DOUBLE_TAP:
         case TD_NONE:
         case TD_UNKNOWN:
             break;
-//        default:
-//            break;
     }
     ql_tap_state.state = TD_NONE;
 }
@@ -240,7 +263,6 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 250)
 };
-
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
