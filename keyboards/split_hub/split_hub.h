@@ -22,11 +22,11 @@
 
 
 inline void board_led_1_on(void) {
-    palClearPad(GPIOC, 13);
+//    palClearPad(GPIOC, 13);
 }
 
 inline void board_led_1_off(void) {
-    palSetPad(GPIOC, 13);
+//    palSetPad(GPIOC, 13);
 }
 
 /*  ---------- LEFT HAND -----------   ---------- RIGHT HAND ---------- */

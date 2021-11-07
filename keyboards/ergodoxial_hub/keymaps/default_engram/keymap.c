@@ -31,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 ,------|------|------|       |------+--------+------.
  *                                 |      |      | Home |       | PgUp |        |      |
  *                                 | Space|Backsp|------|       |------|  Tab   |Enter |
- *                                 |      |ace   | End  |       | PgDn |        |      |
+ *                                 |      |ace   | End  |       | PgDn | /Media |      |
  *                                 `--------------------'       `----------------------'
  *                                        ,-------------.       ,---------------.
  *                                        |LShift| RAlt |       | RAlt | LShift |
@@ -41,13 +41,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // left hand
   KC_ESC,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_LEFT,              KC_RGHT,      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,              KC_BSLASH,
   KC_INS,          KC_B,        KC_Y,          KC_O,    KC_U,    KC_Q,    TG(SYMB),             TG(SYMB),     KC_Z,    KC_L,    KC_D,    KC_W,    KC_V,              KC_QUOTE,
-  KC_DEL,          KC_C,        KC_I,          KC_E,    KC_A,    KC_COMMA,                                    KC_DOT,  KC_H,    KC_T,    KC_S,    LT(MDIA, KC_N),    GUI_T(KC_SCOLON),
+  KC_DEL,          KC_C,        KC_I,          KC_E,    KC_A,    KC_COMMA,                                    KC_DOT,  KC_H,    KC_T,    KC_S,    KC_N,              GUI_T(KC_SCOLON),
   KC_LSFT,         CTL_T(KC_G), KC_X,          KC_J,    KC_K,    KC_MINUS,KC_LPRN,               KC_RPRN,     KC_EQUAL,KC_R,    KC_M,    KC_F,    CTL_T(KC_P),       KC_RSFT,
   LT(SYMB,KC_GRV), KC_SLASH,    LALT(KC_LSFT), KC_LEFT, KC_RGHT,                                                       KC_UP,   KC_DOWN, KC_LBRC, KC_RBRC,           TT(SYMB),
 
                                                            ALT_T(KC_APP), KC_LGUI,                KC_LALT, CTL_T(KC_ESC),
                                                                           KC_HOME,                 KC_PGUP,
-                                                         KC_SPC, KC_BSPC, KC_END,                  KC_PGDN, KC_TAB, KC_ENT,
+                                                         KC_SPC, KC_BSPC, KC_END,                  KC_PGDN, LT(MDIA, KC_TAB), KC_ENT,
 
                                                                  KC_LSFT, KC_RALT,                   KC_RALT, KC_LSFT
 ),

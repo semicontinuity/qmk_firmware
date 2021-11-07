@@ -20,10 +20,12 @@ AUDIO_ENABLE = no           # Audio output
 LAYOUTS = split_3x6_3
 
 # MCU name
-MCU = STM32F103
+#MCU = STM32F103
+MCU = STM32F401
 
 # Bootloader selection
-BOOTLOADER = stm32duino
+#BOOTLOADER = stm32duino
+BOOTLOADER = stm32-dfu
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE -DHALVES_HAVE_DISTINCT_SCAN_CODES=TRUE

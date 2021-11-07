@@ -33,6 +33,8 @@ bool is_released(uint8_t event) {
 extern SerialDriver SD1;
 extern SerialDriver SD3;
 
+extern matrix_row_t matrix[MATRIX_ROWS];
+
 
 uint8_t uart_getchar(SerialDriver *sdp) {
     msg_t res = sdGet(sdp);
@@ -55,7 +57,13 @@ static void process_remote_kbd_events(void) {
             key_event.key.col = logical_row_of(event);
             uprintf("Key event: row: %d, col: %d, pressed: %d\n", key_event.key.row, key_event.key.col, key_event.pressed);
 
-            action_exec(key_event);
+
+            if (key_event.pressed) {
+                matrix[key_event.key.row] |= 1U << key_event.key.col;
+            } else {
+                matrix[key_event.key.row] &= ~(1U << key_event.key.col);
+            }
+//            action_exec(key_event);
         }
     }
 
@@ -70,7 +78,13 @@ static void process_remote_kbd_events(void) {
             key_event.key.row = 13 - logical_column_of(event);
             key_event.key.col = logical_row_of(event);
             uprintf("Key event: row: %d, col: %d, pressed: %d\n", key_event.key.row, key_event.key.col, key_event.pressed);
-            action_exec(key_event);
+
+            if (key_event.pressed) {
+                matrix[key_event.key.row] |= 1U << key_event.key.col;
+            } else {
+                matrix[key_event.key.row] &= ~(1U << key_event.key.col);
+            }
+            //            action_exec(key_event);
         }
     }
 }

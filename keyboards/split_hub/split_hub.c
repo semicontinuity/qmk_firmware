@@ -30,7 +30,8 @@ bool is_released(uint8_t event) {
 
 
 extern SerialDriver SD1;
-extern SerialDriver SD3;
+extern SerialDriver SD2;
+//extern SerialDriver SD3;
 
 extern matrix_row_t matrix[MATRIX_ROWS];
 
@@ -78,10 +79,10 @@ static void process_remote_kbd_events(void) {
         }
     }
 
-    while (uart_available(&SD3)) {
+    while (uart_available(&SD2)) {
         board_led_1_on();
 
-        uint8_t event = uart_getchar(&SD3);
+        uint8_t event = uart_getchar(&SD2);
         if (/*event & 0x80*/1) {
             uprintf("!U3 event: 0x%02x\n", event);
             key_event.time = (timer_read() | 1);
@@ -116,7 +117,7 @@ static void process_remote_kbd_events(void) {
 
 void matrix_init_kb(void) {
     // Init on-board LED
-    palSetPadMode(GPIOC, 13, PAL_MODE_OUTPUT_PUSHPULL);
+    //palSetPadMode(GPIOC, 13, PAL_MODE_OUTPUT_PUSHPULL);
 
     matrix_init_user();
 //    uprintf("Init");
@@ -127,13 +128,17 @@ void matrix_init_kb(void) {
 
 void matrix_init_user(void) {
     // Ideally,
+//    sdStart(&SD1, NULL);
+//    palSetPadMode(GPIOB, 7, PAL_MODE_INPUT_PULLUP | PAL_MODE_STM32_ALTERNATE_PUSHPULL);
+    palSetPadMode(GPIOB, 6, PAL_MODE_ALTERNATE(7));
+    palSetPadMode(GPIOB, 7, PAL_MODE_ALTERNATE(7));
     sdStart(&SD1, NULL);
-//    palSetPadMode(GPIOA, 9, PAL_MODE_STM32_ALTERNATE_PUSHPULL);
-//    palSetPadMode(GPIOA, 10, PAL_MODE_INPUT_PULLUP | PAL_MODE_STM32_ALTERNATE_PUSHPULL);
 //    sdStart(&SD1, &serialConfig);
 
 
-    sdStart(&SD3, NULL);
+    palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
+    palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
+    sdStart(&SD2, NULL);
 //    palSetPadMode(GPIOB, 10,
 //                  PAL_STM32_MODE_ALTERNATE | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_ALTERNATE(7));
 //    palSetPadMode(GPIOB, 11,
