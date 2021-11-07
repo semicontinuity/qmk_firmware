@@ -1,0 +1,21 @@
+#pragma once
+
+#include_next <mcuconf.h>
+
+#define SD_LEFT SD1
+#define SD_LEFT_TX_PORT GPIOB
+#define SD_LEFT_TX_PAD 6
+#define SD_LEFT_RX_PORT GPIOB
+#define SD_LEFT_RX_PAD 7
+
+#define SD_RIGHT SD2
+#define SD_RIGHT_TX_PORT GPIOA
+#define SD_RIGHT_TX_PAD 2
+#define SD_RIGHT_RX_PORT GPIOA
+#define SD_RIGHT_RX_PAD 3
+
+#undef STM32_SERIAL_USE_USART1
+#define STM32_SERIAL_USE_USART1 TRUE
+
+#undef STM32_SERIAL_USE_USART2
+#define STM32_SERIAL_USE_USART2 TRUE
