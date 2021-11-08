@@ -38,7 +38,8 @@ enum layer_id {
   S_NAV,
   CS_NAV,
   S_MULTI,
-  RUSSIAN, // phonetic engram
+  RPE, // phonetic engram
+  RPE_EXT, // phonetic engram extra characters
 };
 
 
@@ -167,18 +168,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                          //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
-  [RUSSIAN] = LAYOUT_split_3x6_3(
+  [RPE] = LAYOUT_split_3x6_3(
   //,---------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
-      _______,     KC_COMMA,     KC_S,         KC_J,         KC_E,               KC_P,                                                   KC_X,               KC_K,             KC_L,          KC_I,          KC_D,          _______,
+      _______,     KC_COMMA,     KC_S,         KC_J,         KC_E,               KC_P, /*з*/                                             KC_X,    /*ч*/      KC_K,             KC_L,          KC_I,          KC_D,          _______,
   //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------+-------------------|
-      _______,     KC_W,         KC_B,         KC_T,         KC_F,               _______,                                                _______,            KC_LBRACKET,      KC_N,          KC_S,          KC_Y,          _______,
+      _______,     KC_W,         KC_B,         KC_T,         KC_F,               KC_QUES,/*,*/                                           KC_SLASH,/*.*/      KC_LBRACKET,      KC_N,          KC_S,          KC_Y,          _______,
   //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------+-------------------|
-      _______,     KC_U,         KC_SCOLON,    KC_Q,         KC_R,               _______,                                                _______,            KC_H,             KC_V,          KC_A,          KC_G,          _______,
+      _______,     KC_U,         KC_SCOLON,    KC_Q,         KC_R,               _______,                                                KC_AMPR, /*?*/      KC_H,             KC_V,          KC_A,          KC_G,          _______,
   //|------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+--------------+-------------------|
-                                                             _______,            _______,    _______,                _______,            _______,            _______
+                                                             OSL(RPE_EXT),       _______,    _______,                _______,            _______,            _______
                                                          //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
+  [RPE_EXT] = LAYOUT_split_3x6_3(
+  //,---------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
+      _______,     XXXXXXX,      KC_RBRACKET,  KC_GRAVE,     KC_DOT,             XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       KC_O,          XXXXXXX,        XXXXXXX,
+  //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
+      _______,     XXXXXXX,      KC_M,         KC_QUOTE,     KC_Z,               XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,
+  //|------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
+      _______,     XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,
+  //|------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
+                                                             XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            XXXXXXX,            XXXXXXX
+                                                         //`----------------------------------------------------'  `---------------------------------------------------------'
+  )
 };
 
 
@@ -275,7 +287,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 //    uprintf("process_record_user\n");
-//    uint8_t mod_state = get_mods();
+    uint8_t mod_state = get_mods();
 //    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
     if (!process_case_modes(keycode, record)) {
         return false;
@@ -290,15 +302,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
       return true;
 
-    case 0x082c:
-        uprintf("0x082c\n");
-        if (record->event.pressed) {
-          if (layer_state_is(RUSSIAN)) {
+    case KC_SPACE:    //
+        uprintf("KC_SPACE\n");
+        if (mod_state == 8 && record->event.pressed) {
+          if (layer_state_is(RPE)) {
             uprintf("russian off\n");
-            layer_off(RUSSIAN);
+            layer_off(RPE);
           } else {
             uprintf("russian on\n");
-            layer_on(RUSSIAN);
+            layer_on(RPE);
           }
         }
         break;
@@ -321,4 +333,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 */
     }
     return true;
-};
+}
