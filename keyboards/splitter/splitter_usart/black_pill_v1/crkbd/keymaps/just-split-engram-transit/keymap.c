@@ -276,7 +276,7 @@ td_state_t cur_dance(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
         return state->pressed ? TD_SINGLE_HOLD : TD_SINGLE_TAP;
     } else if (state->count == 2) {
-        return state->pressed ? TD_SINGLE_TAP_THEN_HOLD : TD_SINGLE_TAP;
+        return state->pressed ? TD_SINGLE_TAP_THEN_HOLD : TD_DOUBLE_TAP;
     }
     else return TD_UNKNOWN;
 }
@@ -293,6 +293,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
+            // Ideally, implement it so that when single tapped, caps lock lights up (how?)
             if (layer_state_is(QWERTY)) {
                 add_oneshot_mods(MOD_MASK_SHIFT);
             } else {
