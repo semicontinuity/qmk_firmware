@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "casemodes.h"
 #include "layouts.h"
 #include <stdio.h>
+#include <common/timer.h>
 
 enum {
   TD_RAISE
@@ -39,10 +40,10 @@ enum layer_id {
   NUM,
 //  NAV,
   NAV2,
-  C_NAV,
+//  C_NAV,
 //  S_NAV,
   S_NAV2,
-  CS_NAV
+//  CS_NAV
 };
 
 
@@ -94,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
       _______,            XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,
   //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
-                                                                    KC_ESC,             XXXXXXX,     XXXXXXX,               XXXXXXX,            XXXXXXX,            XXXXXXX
+                                                                    KC_TAB,             XXXXXXX,     XXXXXXX,               XXXXXXX,            XXXXXXX,            XXXXXXX
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
@@ -188,14 +189,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
       _______,            A(KC_LEFT),   A(KC_DOWN),   A(KC_UP),     A(KC_RIGHT),        XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
-      _______,            C(KC_LEFT),   C(KC_DOWN),   C(KC_UP),     C(KC_RIGHT),        XXXXXXX,                                                XXXXXXX,            KC_LEFT,          KC_DOWN,       KC_UP,         KC_RIGHT,       C(KC_DEL),
+      KC_ESC,             C(KC_LEFT),   C(KC_DOWN),   C(KC_UP),     C(KC_RIGHT),        XXXXXXX,                                                XXXXXXX,            KC_LEFT,          KC_DOWN,       KC_UP,         KC_RIGHT,       C(KC_DEL),
   //|-------------------+-------------+-------------+-------------+---------------+----------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
       _______,            C(KC_HOME),   C(KC_PGDOWN), C(KC_PGUP),   C(KC_END),          XXXXXXX,                                                XXXXXXX,            KC_HOME,          KC_PGDOWN,     KC_PGUP,       KC_END,         _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
-                                                                    XXXXXXX,            XXXXXXX,     XXXXXXX, /* HELD */    C(KC_ENT),          TT(C_NAV),          C(KC_BSPC)
+                                                                    KC_TAB,             KC_SPACE,    TT(NAV2), /* HELD */   KC_ENT,             XXXXXXX,            KC_BSPC
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
+/*
   [C_NAV] = LAYOUT_split_3x6_3(
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
       _______,            XXXXXXX,      MEH(KC_7),    MEH(KC_8),    MEH(KC_9),          XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,
@@ -207,6 +209,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                     XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            _______,            XXXXXXX
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
+*/
 /*
   [S_NAV] = LAYOUT_split_3x6_3(
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
@@ -229,10 +232,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
       _______,            C_S(KC_HOME), C_S(KC_PGDN), C_S(KC_PGUP), C_S(KC_END),        XXXXXXX,                                                XXXXXXX,            S(KC_HOME),       S(KC_PGDOWN),  S(KC_PGUP),    S(KC_END),      XXXXXXX,
   //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
-                                                                    XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            TT(CS_NAV),         C_S(KC_BSPC)
+                                                                    XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            XXXXXXX,            C_S(KC_BSPC)
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
-
+/*
   [CS_NAV] = LAYOUT_split_3x6_3(
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
       _______,            XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,
@@ -244,6 +247,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                     XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            _______,            C_S(KC_BSPC)
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   )
+  */
 };
 
 
@@ -254,15 +258,25 @@ typedef enum {
     TD_NONE,
     TD_UNKNOWN,
     TD_SINGLE_TAP,
+    TD_SINGLE_LONG_TAP,
     TD_SINGLE_HOLD,
     TD_DOUBLE_TAP,
     TD_SINGLE_TAP_THEN_HOLD,
 } td_state_t;
 
+
 typedef struct {
-    bool is_press_action;
     td_state_t state;
+    uint16_t press_timestamp;
+    uint16_t release_timestamp;
 } td_tap_t;
+
+
+static td_tap_t ql_tap_state = {
+    .state = TD_NONE,
+    .press_timestamp = 0,
+    .release_timestamp = 0
+};
 
 
 // Function associated with all tap dances
@@ -275,22 +289,45 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 
 // Determine the current tap dance state
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
+    uprintf("cur_dance: now %d, was %d\n", timer_read(), ql_tap_state.press_timestamp);
+
     if (state->count == 1) {
-        return state->pressed ? TD_SINGLE_HOLD : TD_SINGLE_TAP;
+        if (state->pressed) {
+            return TD_SINGLE_HOLD;
+        } else {
+            //        uint16_t elapsed = timer_elapsed(ql_tap_state.press_timestamp);
+            uint16_t elapsed = TIMER_DIFF_16(ql_tap_state.release_timestamp, ql_tap_state.press_timestamp);
+            uprintf("elapsed %d\n", elapsed);
+
+            if (elapsed > 100) {
+                uprintf("TD_SINGLE_LONG_TAP\n");
+                return TD_SINGLE_LONG_TAP;
+            } else {
+                return TD_SINGLE_TAP;
+            }
+        }
     } else if (state->count == 2) {
         return state->pressed ? TD_SINGLE_TAP_THEN_HOLD : TD_DOUBLE_TAP;
     }
     else return TD_UNKNOWN;
 }
 
-// Initialize tap structure associated with example tap dance key
-static td_tap_t ql_tap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
+/*
+
+void ql_each(qk_tap_dance_state_t *state, void *user_data) {
+    uint16_t t = timer_read();
+    uprintf("EACH sc=%d st=%d t=%d\n", state->count, state->timer, t);
+    ql_tap_state.press_timestamp = t;
+
+    //    if (state->count == 1) {
+//        uint16_t elapsed = timer_elapsed(state->timer);
+//        uprintf("elapsed %d\n", elapsed);
+//        ql_tap_state.press_timestamp = elapsed;
+//    }
+}
+*/
 
 
-// Functions that control what our tap dance key does
 void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
@@ -303,6 +340,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
             }
             break;
         case TD_SINGLE_HOLD:
+        case TD_SINGLE_LONG_TAP:
             layer_on(NAV2);
             break;
         case TD_DOUBLE_TAP:
@@ -328,18 +366,20 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
             break;
         case TD_SINGLE_HOLD:
             layer_off(NAV2);
-            layer_off(C_NAV);
+//            layer_off(C_NAV);
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
             layer_off(S_NAV2);
-            layer_off(CS_NAV);
+//            layer_off(CS_NAV);
             break;
         case TD_DOUBLE_TAP:
+        case TD_SINGLE_LONG_TAP:
         case TD_NONE:
         case TD_UNKNOWN:
             break;
     }
     ql_tap_state.state = TD_NONE;
+    ql_tap_state.press_timestamp = 0;
 }
 
 
@@ -350,7 +390,17 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//    uprintf("process_record_user\n");
+    if (keycode == QK_TAP_DANCE) {
+        if (record->event.pressed) {
+            ql_tap_state.press_timestamp = record->event.time;
+            uprintf("process_record_user PRESSED keycode=%04x t=%d\n", keycode, record->event.time);
+        } else {
+            ql_tap_state.release_timestamp = record->event.time;
+            uprintf("process_record_user RELEASED keycode=%04x t=%d\n", keycode, record->event.time);
+        }
+    }
+
+    //    uprintf("process_record_user\n");
     uint8_t mod_state = get_mods();
 //    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
     if (!process_case_modes(keycode, record)) {
