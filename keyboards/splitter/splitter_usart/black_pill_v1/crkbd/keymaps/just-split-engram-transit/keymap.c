@@ -48,6 +48,23 @@ enum layer_id {
 //  CS_NAV
 };
 
+enum custom_keycodes {
+    KC_NEW = SAFE_RANGE,
+    KC_INT,
+    KC_STR,
+    KC_CHAR,
+    KC_PQUEUE,
+    KC_LINKED,
+    KC_ARRAY,
+    KC_LIST,
+    KC_DEQUEUE,
+    KC_COMP,
+    KC_ENTRY,
+    KC_TREE,
+    KC_HASH_,
+    KC_MAP,
+    KC_SET
+};
 
 #define C_S(kc) (QK_LCTL | QK_LSFT| (kc))
 #define A_S(kc) (QK_LALT | QK_LSFT| (kc))
@@ -126,6 +143,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
+  // Multi layer, but with programming macros
+  [MULTI] = LAYOUT_split_3x6_3( // with nav keys
+  //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
+      _______,            LCTL(KC_B),   LCTL(KC_Y),   LCTL(KC_O),   LCTL(KC_U),         LCTL(KC_Z),                                             KC_PQUEUE,          KC_LINKED,        KC_ARRAY,      KC_LIST,       KC_DEQUEUE,     _______,
+  //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
+      _______,            LCTL(KC_C),   LCTL(KC_I),   LCTL(KC_E),   LCTL(KC_A),         C(KC_COMM),                                             KC_COMP,            KC_LT,            KC_COMMA,      KC_SPACE,      KC_GT,          KC_NEW,
+  //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
+      _______,            LCTL(KC_G),   LCTL(KC_X),   LCTL(KC_J),   LCTL(KC_K),         C(KC_SCLN),                                             KC_ENTRY,           KC_TREE,          KC_HASH_,      KC_MAP,        KC_SET,         _______,
+  //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
+                                                                    XXXXXXX, /*HELD*/   TG(QWERTY),  XXXXXXX,               KC_INT,             KC_STR,             KC_CHAR
+                                                                //`----------------------------------------------------'  `---------------------------------------------------------'
+      ),
+/*
+
   [MULTI] = LAYOUT_split_3x6_3( // with nav keys
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
       _______,            LCTL(KC_B),   LCTL(KC_Y),   LCTL(KC_O),   LCTL(KC_U),         LCTL(KC_Z),                                             TG(QWERTY),         XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        _______,
@@ -137,16 +168,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                     XXXXXXX,            XXXXXXX,     XXXXXXX,               KC_MEDIA_STOP,      KC_MPLY,            KC_MUTE
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
+*/
 
   [QMULTI] = LAYOUT_split_3x6_3( // invoked from QWERTY
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
-      _______,            LCTL(KC_Q),   LCTL(KC_W),   LCTL(KC_E),   LCTL(KC_R),         LCTL(KC_T),                                             TG(QWERTY),         XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        _______,
+      _______,            LCTL(KC_Q),   LCTL(KC_W),   LCTL(KC_E),   LCTL(KC_R),         LCTL(KC_T),                                             XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
       _______,            LCTL(KC_A),   LCTL(KC_S),   LCTL(KC_D),   LCTL(KC_F),         C(KC_G),                                                XXXXXXX,            KC_MPRV,          KC_VOLD,       KC_VOLU,       KC_MNXT,        _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
       _______,            LCTL(KC_Z),   LCTL(KC_X),   LCTL(KC_C),   LCTL(KC_V),         C(KC_B),                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,        _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
-                                                                    XXXXXXX,            XXXXXXX,     XXXXXXX,               KC_MEDIA_STOP,      KC_MPLY,            KC_MUTE
+                                                                    XXXXXXX, /*HELD*/   TG(QWERTY),  XXXXXXX,               KC_MEDIA_STOP,      KC_MPLY,            KC_MUTE
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
@@ -474,5 +506,56 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         break;
 */
     }
+
+    if (record->event.pressed) {
+        switch (keycode) {
+            case KC_NEW:
+                SEND_STRING("new ");
+                break;
+            case KC_INT:
+                SEND_STRING("Integer");
+                break;
+            case KC_STR:
+                SEND_STRING("String");
+                break;
+            case KC_CHAR:
+                SEND_STRING("Character");
+                break;
+            case KC_PQUEUE:
+                SEND_STRING("PriorityQueue");
+                break;
+            case KC_LINKED:
+                SEND_STRING("Linked");
+                break;
+            case KC_ARRAY:
+                SEND_STRING("Array");
+                break;
+            case KC_LIST:
+                SEND_STRING("List");
+                break;
+            case KC_DEQUEUE:
+                SEND_STRING("Dequeue");
+                break;
+            case KC_COMP:
+                SEND_STRING("Comparator");
+                break;
+            case KC_ENTRY:
+                SEND_STRING("Map.Entry");
+                break;
+            case KC_TREE:
+                SEND_STRING("Tree");
+                break;
+            case KC_HASH_:
+                SEND_STRING("Hash");
+                break;
+            case KC_MAP:
+                SEND_STRING("Map");
+                break;
+            case KC_SET:
+                SEND_STRING("Set");
+                break;
+        }
+    }
+
     return true;
 }
