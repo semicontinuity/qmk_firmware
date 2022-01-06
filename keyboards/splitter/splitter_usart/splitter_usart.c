@@ -43,7 +43,11 @@ uint8_t logical_column_of(uint8_t event) {
 }
 
 uint8_t logical_row_of(uint8_t event) {
+#ifdef FLIP_COLS
+    return MATRIX_COLS - 1 - (event & 7);
+#else
     return event & 7;
+#endif
 }
 
 bool is_released(uint8_t event) {
@@ -66,11 +70,14 @@ bool uart_available(SerialDriver *sdp) { return !sdGetWouldBlock(sdp); }
 static void process_remote_kbd_events(SerialDriver *sdp, uint8_t row_offset) {
     while (uart_available( sdp)) {
         uint8_t event = uart_getchar(sdp);
+//        uprintf("\n[%d] event: %02x\n", row_offset, event);
+
         // Can modify the protocol to always set bit 7 (and check it here), so have more protection against received 'glitch' events
         key_event.time = (timer_read() | 1);
         key_event.pressed = !is_released(event);
         key_event.key.row = row_offset + logical_column_of(event);
         key_event.key.col = logical_row_of(event);
+//        uprintf("[%d] pressed: %d  row: %d  col: %d\n", row_offset, key_event.pressed, key_event.key.row, key_event.key.col);
 
         if (key_event.pressed) {
             matrix[key_event.key.row] |= 1U << key_event.key.col;
