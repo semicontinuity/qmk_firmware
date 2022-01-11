@@ -44,9 +44,9 @@ uint8_t logical_column_of(uint8_t event) {
 
 uint8_t logical_row_of(uint8_t event) {
 #ifdef FLIP_COLS
-    return MATRIX_COLS - 1 - (event & 7);
+    return MATRIX_COLS - 1 - (event & 7U);
 #else
-    return event & 7;
+    return event & 7U;
 #endif
 }
 
@@ -67,17 +67,27 @@ uint8_t uart_getchar(SerialDriver *sdp) {
 bool uart_available(SerialDriver *sdp) { return !sdGetWouldBlock(sdp); }
 
 
-static void process_remote_kbd_events(SerialDriver *sdp, uint8_t row_offset) {
+static void process_remote_kbd_events(SerialDriver *sdp, bool is_right) {
     while (uart_available( sdp)) {
         uint8_t event = uart_getchar(sdp);
-//        uprintf("\n[%d] event: %02x\n", row_offset, event);
+        uprintf("\n[is_right=%d] event: %02x\n", is_right, event);
 
         // Can modify the protocol to always set bit 7 (and check it here), so have more protection against received 'glitch' events
         key_event.time = (timer_read() | 1);
         key_event.pressed = !is_released(event);
-        key_event.key.row = row_offset + logical_column_of(event);
+
+#ifdef MIRROR_X_IN_HALF
+        if (is_right) {
+            key_event.key.row = MATRIX_ROWS - 1 - logical_column_of(event);
+        } else {
+            key_event.key.row = logical_column_of(event);
+        }
+#else
+        key_event.key.row = (is_right ? MATRIX_ROWS / 2 : 0) + logical_column_of(event);
+#endif
+
         key_event.key.col = logical_row_of(event);
-//        uprintf("[%d] pressed: %d  row: %d  col: %d\n", row_offset, key_event.pressed, key_event.key.row, key_event.key.col);
+        uprintf("[is_right=%d] pressed: %d  row: %d  col: %d\n", is_right, key_event.pressed, key_event.key.row, key_event.key.col);
 
         if (key_event.pressed) {
             matrix[key_event.key.row] |= 1U << key_event.key.col;
@@ -111,6 +121,6 @@ void matrix_init_user(void) {
 
 
 void matrix_scan_user(void) {
-    process_remote_kbd_events(&SD_LEFT, 0);
-    process_remote_kbd_events(&SD_RIGHT, MATRIX_ROWS/2);
+    process_remote_kbd_events(&SD_LEFT, false);
+    process_remote_kbd_events(&SD_RIGHT, true);
 }

@@ -5,6 +5,7 @@
 #define MATRIX_ROWS 14
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
 #define MATRIX_COLS 6
+#define MIRROR_X_IN_HALF
 
 #define DIRECT_PINS {\
     /* L00, L10, ... */                                   \
