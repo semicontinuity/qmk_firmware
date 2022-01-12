@@ -70,7 +70,7 @@ bool uart_available(SerialDriver *sdp) { return !sdGetWouldBlock(sdp); }
 static void process_remote_kbd_events(SerialDriver *sdp, bool is_right) {
     while (uart_available( sdp)) {
         uint8_t event = uart_getchar(sdp);
-        uprintf("\n[is_right=%d] event: %02x\n", is_right, event);
+//        uprintf("\n[is_right=%d] event: %02x\n", is_right, event);
 
         // Can modify the protocol to always set bit 7 (and check it here), so have more protection against received 'glitch' events
         key_event.time = (timer_read() | 1);
@@ -87,7 +87,7 @@ static void process_remote_kbd_events(SerialDriver *sdp, bool is_right) {
 #endif
 
         key_event.key.col = logical_row_of(event);
-        uprintf("[is_right=%d] pressed: %d  row: %d  col: %d\n", is_right, key_event.pressed, key_event.key.row, key_event.key.col);
+//        uprintf("[is_right=%d] pressed: %d  row: %d  col: %d\n", is_right, key_event.pressed, key_event.key.row, key_event.key.col);
 
         if (key_event.pressed) {
             matrix[key_event.key.row] |= 1U << key_event.key.col;
