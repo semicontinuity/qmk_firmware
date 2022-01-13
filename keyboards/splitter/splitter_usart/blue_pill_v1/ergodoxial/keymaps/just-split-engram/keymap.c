@@ -211,7 +211,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      C(KC_ENT),      TT(NAV2),       KC_ESC,               C(KC_DEL),        KC_ENT,         TT(S_NAV2)                                                                                        //
+                                                                                      C(KC_ENT),      KC_ALT_ERASE,   KC_ESC,               C(KC_DEL),        KC_ENT,         TT(S_NAV2)                                                                                        //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -225,7 +225,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      C(KC_ENT),      TT(NAV2),       KC_ESC,               XXXXXXX,          KC_ENT,         TT(S_NAV2)                                                                                        //
+                                                                                      C(KC_ENT),      KC_ALT_ERASE,   KC_ESC,               XXXXXXX,          KC_ENT,         TT(S_NAV2)                                                                                        //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -344,8 +344,9 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
                 add_oneshot_mods(MOD_MASK_SHIFT);
             }
             break;
-        case TD_SINGLE_HOLD:
         case TD_SINGLE_LONG_TAP:
+            send_led_state(LED_STATE_NAV_LOCK);
+        case TD_SINGLE_HOLD:
             layer_on(NAV2);
             break;
         case TD_DOUBLE_TAP:
@@ -395,7 +396,18 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == KC_ALT_ERASE) {
+        // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
+        // Assume that NAV2 layer is locked.
+        layer_off(NAV2);
+        layer_off(S_NAV2);
+        send_led_state(0);
+        return true;
+    }
+
+
     if (keycode == QK_TAP_DANCE) {
+        // In current layout, there is only one tap dance key: TD_RAISE
         if (record->event.pressed) {
             ql_tap_state.press_timestamp = record->event.time;
             uprintf("process_record_user PRESSED keycode=%04x t=%d\n", keycode, record->event.time);

@@ -21,3 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 #include <stdint.h>
 #include <stdbool.h>
+
+#define LED_STATE_NAV_LOCK 4
+
+void send_led_state(uint8_t state);

@@ -59,6 +59,11 @@ extern SerialDriver SD_LEFT;
 extern SerialDriver SD_RIGHT;
 
 
+
+void uart_putchar(SerialDriver *sdp, uint8_t c) {
+    sdPut(sdp, c);
+}
+
 uint8_t uart_getchar(SerialDriver *sdp) {
     msg_t res = sdGet(sdp);
     return (uint8_t)res;
@@ -123,4 +128,9 @@ void matrix_init_user(void) {
 void matrix_scan_user(void) {
     process_remote_kbd_events(&SD_LEFT, false);
     process_remote_kbd_events(&SD_RIGHT, true);
+}
+
+void send_led_state(uint8_t state) {
+    uart_putchar(&SD_LEFT, state);
+    uart_putchar(&SD_RIGHT, state);
 }
