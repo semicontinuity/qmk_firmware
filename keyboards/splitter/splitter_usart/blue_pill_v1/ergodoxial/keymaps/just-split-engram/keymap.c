@@ -5,6 +5,10 @@
 //#include <stdio.h>
 #include <common/timer.h>
 
+bool raise_active = false;
+uint16_t raise_activation_time16 = 0;
+uint32_t raise_activation_time = 0;
+uint32_t nav_layer_pressed_mask = 0;
 
 enum {
     TD_RAISE
@@ -112,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       _______,        _______,              _______,          _______,                                                                                                          //
                                                                                                                       _______,              _______,                                                                                                                            //
-                                                                                      KC_DOT,         KC_UNDS,        KC_DOLLAR,            KC_TILDE,         KC_QUES,        KC_COMMA                                                                                          //
+                                                                                      _______,        KC_UNDS,        KC_DOLLAR,            KC_TILDE,         KC_QUES,        KC_COMMA                                                                                          //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -183,7 +187,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      KC_INSERT,      KC_APPLICATION, LALT(KC_ESC),         XXXXXXX,          XXXXXXX,       XXXXXXX                                                                                            //
+                                                                                      KC_INSERT,      KC_APPLICATION, LALT(KC_ESC),         XXXXXXX,          XXXXXXX,        XXXXXXX                                                                                            //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -197,7 +201,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      KC_0,           KC_SPACE,       XXXXXXX,              XXXXXXX,          XXXXXXX,       XXXXXXX                                                                                            //
+                                                                                      KC_0,           KC_SPACE,       XXXXXXX,              XXXXXXX,          XXXXXXX,        XXXXXXX                                                                                            //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -225,7 +229,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      C(KC_ENT),      KC_ALT_ERASE,   KC_ESC,               XXXXXXX,          KC_ENT,         TT(S_NAV2)                                                                                        //
+                                                                                      C(KC_ENT),      KC_ALT_ERASE,   KC_ESC,               XXXXXXX,          KC_ENT,         XXXXXXX                                                                                        //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -304,7 +308,7 @@ td_state_t cur_dance(qk_tap_dance_state_t *state) {
             uint16_t elapsed = TIMER_DIFF_16(ql_tap_state.release_timestamp, ql_tap_state.press_timestamp);
             uprintf("elapsed %d\n", elapsed);
 
-            if (elapsed > 100) {
+            if (elapsed > 150) {
                 uprintf("TD_SINGLE_LONG_TAP\n");
                 return TD_SINGLE_LONG_TAP;
             } else {
@@ -338,16 +342,27 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
             // Ideally, implement it so that when single tapped, caps lock lights up (how?)
-            if (layer_state_is(QWERTY)) {
-                add_oneshot_mods(MOD_MASK_SHIFT);
-            } else {
-                add_oneshot_mods(MOD_MASK_SHIFT);
-            }
+            add_oneshot_mods(MOD_MASK_SHIFT);
+            uprintf("OS SHIFT\n");
+            raise_active = true;
+//            raise_activation_time = timer_read32();
+//            raise_activation_time16 = timer_read();
+
+//            if (layer_state_is(QWERTY)) {
+//                add_oneshot_mods(MOD_MASK_SHIFT);
+//            } else {
+//                add_oneshot_mods(MOD_MASK_SHIFT);
+//            }
             break;
         case TD_SINGLE_LONG_TAP:
             send_led_state(LED_STATE_NAV_LOCK);
+            layer_on(NAV2);
+            break;
         case TD_SINGLE_HOLD:
             layer_on(NAV2);
+            raise_active = true;
+//            raise_activation_time16 = timer_read();
+//            raise_activation_time = timer_read32();
             break;
         case TD_DOUBLE_TAP:
             toggle_caps_word();
@@ -364,14 +379,23 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
-            if (layer_state_is(QWERTY)) {
-                del_mods(MOD_MASK_SHIFT);
-            } else {
-                del_mods(MOD_MASK_SHIFT);
-            }
+            raise_active = false;
+            del_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
+//            del_oneshot_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
+//            if (layer_state_is(QWERTY)) {
+//                del_mods(MOD_MASK_SHIFT);
+//            } else {
+//                del_mods(MOD_MASK_SHIFT);
+//            }
             break;
         case TD_SINGLE_HOLD:
+            raise_active = false;
             layer_off(NAV2);
+
+            // When
+//            if (nav_layer_pressed_mask & 1) unregister_code(KC_QUES);
+//            if (nav_layer_pressed_mask & 2) unregister_code(KC_DOT);
+//            nav_layer_pressed_mask = 0;
 //            layer_off(C_NAV);
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
@@ -391,29 +415,73 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
 
 // Associate our tap dance key with its functionality
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_RAISE] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 250)
+    [TD_RAISE] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, TAPPING_TERM)
 };
 
 
+uint16_t remap_nav_layer_key(uint16_t keycode) {
+    if (layer_state_is(NAV2)) {
+        switch (keycode) {
+            case KC_ENTER: return KC_DOT;
+        }
+    }
+    return 0;
+}
+
+/**
+ * If returns true QMK will process the keycodes as usual.
+ * If returns false QMK will skip the normal key handling, and it will be up to you to send any key up or down events that are required.
+ */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
+
+    // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
+    uint16_t nav_layer_remapped_key = 0;
+    uint32_t nav_layer_mask = 0;
+    if (record->event.key.row == 9 && record->event.key.col == 4) {
+        nav_layer_remapped_key = KC_QUES;
+        nav_layer_mask         = 1;
+    }
+    if (keycode == KC_ENTER) {
+        nav_layer_remapped_key = KC_DOT;
+        nav_layer_mask         = 2;
+    }
+
+    if (nav_layer_remapped_key) {
+        if (record->event.pressed) {
+            uint16_t delay = TIMER_DIFF_16(record->event.time, ql_tap_state.press_timestamp);
+//            uprintf("delay=%d\n", delay);
+            if (raise_active && (delay < TAPPING_TERM)) {
+                nav_layer_pressed_mask |= nav_layer_mask;
+                register_code16(nav_layer_remapped_key);
+                return false;
+            }
+        } else if (nav_layer_pressed_mask & nav_layer_mask) {
+            nav_layer_pressed_mask &= ~nav_layer_mask;
+            unregister_code16(nav_layer_remapped_key);
+            return false;
+        }
+    }
+
+
     if (keycode == KC_ALT_ERASE) {
         // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
         send_led_state(0);
-        return true;
+        return false;
     }
 
-
+    // Measure duration of tap dance
     if (keycode == QK_TAP_DANCE) {
         // In current layout, there is only one tap dance key: TD_RAISE
         if (record->event.pressed) {
             ql_tap_state.press_timestamp = record->event.time;
-            uprintf("process_record_user PRESSED keycode=%04x t=%d\n", keycode, record->event.time);
+//            uprintf("process_record_user PRESSED keycode=%04x t=%d\n", keycode, record->event.time);
         } else {
             ql_tap_state.release_timestamp = record->event.time;
-            uprintf("process_record_user RELEASED keycode=%04x t=%d\n", keycode, record->event.time);
+//            uprintf("process_record_user RELEASED keycode=%04x t=%d\n", keycode, record->event.time);
         }
     }
 
