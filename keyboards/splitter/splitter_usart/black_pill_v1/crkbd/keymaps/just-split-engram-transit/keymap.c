@@ -78,13 +78,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LOWER] = LAYOUT_split_3x6_3(
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
-      _______,            KC_MINUS,     KC_LT,        KC_GT,        KC_AMPR,            KC_PERC,                                                KC_TILDE,           KC_AT,            KC_ASTERISK,   KC_SLASH,      KC_GRAVE,       _______,
+      _______,            KC_EXLM,      KC_LT,        KC_GT,        KC_AMPR,            KC_CIRC,                                                KC_TILDE,           KC_AT,            KC_LBRACKET,  KC_RBRACKET,    KC_GRAVE,       _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
-      KC_DOLLAR,          KC_PLUS,      KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,        KC_TILDE,
+      C(KC_SLASH),        KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,        KC_CIRC,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
-      _______,            KC_EXLM,      KC_LBRACKET,  KC_RBRACKET,  KC_PIPE,            KC_1,                                                   KC_3,               KC_COLON,         KC_CIRC,       KC_BSLASH,     KC_QUOTE,       _______,
+      _______,            KC_PLUS,      KC_ASTERISK,  KC_SLASH,     KC_PIPE,            KC_1,                                                   KC_3,               KC_COLON,         KC_DOLLAR,     KC_PERC,       KC_QUOTE,       _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
-                                                                    KC_HASH,            KC_SPACE,    KC_UNDS,               KC_QUES,            KC_COMMA,/*active*/ KC_PERC
+                                                                    KC_HASH,            KC_SPACE,    KC_UNDS,               KC_SLASH,           KC_COMMA,/*active*/ KC_TILDE
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
@@ -100,15 +100,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                                              //`----------------------------------------------------'  `---------------------------------------------------------'
 //),
 
-  [R_LOWER] = LAYOUT_split_3x6_3( // LOWER layer, when activated from RPE (russian layout): same as LOWER, except characters that cannot be typed + extra russian characters
+  [R_LOWER] = LAYOUT_split_3x6_3( // LOWER layer, when activated from RPE (russian layout): same as LOWER, except characters that cannot be typed + extra russian characters (э ё ю я ь ъ щ)
   //,----------------------------------------------------------------------------------------------.                                          ,------------------------------------------------------------------------------------------------------.
-      _______,            KC_MINUS,     KC_QUOT,/*э*/ KC_GRV,/*ё*/  XXXXXXX,            KC_PERC,                                                _______,            XXXXXXX,          KC_ASTERISK,   KC_PIPE, /*/*/ XXXXXXX,        _______,
+      _______,            KC_EXLM,      KC_QUOT,/*э*/ KC_GRV,/*ё*/  KC_DOT,  /*ю*/      KC_CIRC,                                                _______,            XXXXXXX,          XXXXXXX,       KC_O,   /*щ*/  XXXXXXX,        _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
-      _______,            KC_PLUS,      KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_DOLLAR,/*;*/   KC_M, /*ь*/    KC_O, /*щ*/    KC_AT,   /*"*/  _______,
+      _______,            KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_DOLLAR,/*;*/   KC_M,   /*ь*/  KC_RBRC,/*ъ*/  KC_AT,   /*"*/  _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------+------------------|
-      _______,            KC_EXLM,      XXXXXXX,      KC_DOT,/*ю*/  KC_Z,/*я*/          KC_1,                                                   KC_3,               KC_CIRC,  /*:*/   KC_RBRC,/*ъ*/  KC_BSLASH,     XXXXXXX,        _______,
+      _______,            KC_PLUS,      KC_ASTERISK,  KC_PIPE,/*/*/ KC_Z,    /*я*/      KC_1,                                                   KC_3,               KC_CIRC,  /*:*/   XXXXXXX,       KC_PERC,       XXXXXXX,        _______,
   //|-------------------+-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------+------------------|
-                                                                    KC_HASH, /*№*/      KC_SPACE,    KC_UNDS,               KC_AMPR/*?*/,       KC_QUES,/*,*/       KC_PERC
+                                                                    KC_HASH, /*№*/      KC_SPACE,    KC_UNDS,               XXXXXXX,            KC_QUES,/*,*/       XXXXXXX
                                                                 //`----------------------------------------------------'  `---------------------------------------------------------'
   ),
 
