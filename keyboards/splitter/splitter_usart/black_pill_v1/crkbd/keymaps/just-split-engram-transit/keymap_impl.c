@@ -159,13 +159,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
     uint16_t nav_layer_remapped_key = 0;
     uint32_t nav_layer_mask = 0;
-//    if (record->event.key.row == 9 && record->event.key.col == 4) {
-//        nav_layer_remapped_key = KC_QUES;
-//        nav_layer_mask         = 1;
-//    }
-    if (keycode == KC_ENTER) {
-        nav_layer_remapped_key = KC_DOT;
-        nav_layer_mask         = 2;
+
+    if (record->event.key.row == 3) {
+        // Left thumb cluster
+        if (record->event.key.col == 3) {
+            nav_layer_remapped_key = C(KC_C);
+            nav_layer_mask         = 1;
+        }
+        if (record->event.key.col == 4) {
+            nav_layer_remapped_key = C(KC_V);
+            nav_layer_mask         = 1;
+        }
+    }
+    if (record->event.key.row == 7) {
+        // Right thumb cluster
+        if (record->event.key.col == 5) {
+            nav_layer_remapped_key = KC_COMMA;
+            nav_layer_mask         = 1;
+        }
+        if (record->event.key.col == 4) {
+            nav_layer_remapped_key = KC_DOT;
+            nav_layer_mask         = 1;
+        }
+        if (record->event.key.col == 3) {
+            nav_layer_remapped_key = KC_QUES;
+            nav_layer_mask         = 1;
+        }
     }
 
     if (nav_layer_remapped_key) {
