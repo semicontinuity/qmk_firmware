@@ -101,25 +101,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // with underscore (inaccessible from QWERTY)
   [LOWER] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_EXLM,      KC_LT,        KC_GT,        KC_AMPR,            _______,                                                _______,            KC_AT,            KC_ASTERISK,   KC_SLASH,      KC_GRAVE,
+      KC_EXLM,      KC_LT,        KC_GT,        KC_AMPR,            KC_CIRC,                                                KC_TILDE,           KC_AT,            KC_LBRACKET,   KC_RBRACKET,   KC_GRAVE,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_PERC,                                                KC_TILDE,           KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,
+      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      KC_LBRACKET,  KC_RBRACKET,  KC_PIPE,            KC_UNDS,                                                _______,            KC_COLON,         KC_CIRC,       KC_BSLASH,     KC_QUOTE,
+      KC_PLUS,      KC_ASTERISK,  KC_SLASH,     KC_PIPE,            KC_1,                                                   KC_3,               KC_COLON,         KC_DOLLAR,     KC_PERC,       KC_QUOTE,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    KC_HASH,      _______,            _______,     KC_DOLLAR,             _______,            _______,            _______,          _______,                      XXXXXXX
+      XXXXXXX,                    KC_HASH,      KC_SPACE,           KC_UNDS,     C(KC_SLASH),           KC_CIRC,            KC_BSLASH,          KC_COMMA,         KC_TILDE,                     XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
   [R_LOWER] = LAYOUT_split_3x5_3_p( // LOWER layer, when activated from RPE (russian layout): same as LOWER, except characters that cannot be typed + extra russian characters (э ё ю я ь ъ щ)
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_EXLM,      XXXXXXX,      XXXXXXX,      KC_AMPR,            _______,                                                _______,            XXXXXXX,          KC_ASTERISK,   KC_PIPE, /*/*/ XXXXXXX,
+      KC_EXLM,      KC_QUOT,/*э*/ KC_GRV,/*ё*/  KC_DOT,  /*ю*/,     KC_CIRC,                                                _______,            XXXXXXX,          XXXXXXX,       KC_PIPE, /*/*/ XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_PERC,                                                XXXXXXX,            KC_DOLLAR,/*;*/   XXXXXXX,       XXXXXXX,       KC_AT,   /*"*/
+      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_DOLLAR,/*;*/   KC_M,   /*ь*/  KC_RBRC,/*ъ*/  KC_AT,   /*"*/
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      XXXXXXX,      XXXXXXX,      XXXXXXX,            KC_UNDS,                                                _______,            KC_CIRC,  /*:*/   XXXXXXX,       KC_BSLASH,     XXXXXXX,
+      KC_PLUS,      XXXXXXX,      XXXXXXX,      XXXXXXX,            KC_1,                                                   KC_3,               KC_CIRC,  /*:*/   XXXXXXX,       KC_PERC,       XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    KC_HASH, /*№*/      _______,      _______,     XXXXXXX,               XXXXXXX,            _______,            _______,          XXXXXXX,                      XXXXXXX
+      XXXXXXX,                    KC_HASH,/*№*/ KC_SPACE,           KC_UNDS,     XXXXXXX,               XXXXXXX,            KC_BSLASH,          KC_QUES,  /*,*/,  XXXXXXX,                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
