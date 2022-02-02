@@ -101,23 +101,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // with underscore (inaccessible from QWERTY)
   [LOWER] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_MINUS,     KC_LT,        KC_GT,        KC_AMPR,            _______,                                                _______,            KC_AT,            KC_ASTERISK,   KC_SLASH,      KC_GRAVE,
+      KC_EXLM,      KC_LT,        KC_GT,        KC_AMPR,            _______,                                                _______,            KC_AT,            KC_ASTERISK,   KC_SLASH,      KC_GRAVE,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_PERC,                                                KC_TILDE,           KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,
+      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_PERC,                                                KC_TILDE,           KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_EXLM,      KC_LBRACKET,  KC_RBRACKET,  KC_PIPE,            KC_UNDS,                                                _______,            KC_COLON,         KC_CIRC,       KC_BSLASH,     KC_QUOTE,
+      KC_PLUS,      KC_LBRACKET,  KC_RBRACKET,  KC_PIPE,            KC_UNDS,                                                _______,            KC_COLON,         KC_CIRC,       KC_BSLASH,     KC_QUOTE,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
       XXXXXXX,                    KC_HASH,      _______,            _______,     KC_DOLLAR,             _______,            _______,            _______,          _______,                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
-  [R_LOWER] = LAYOUT_split_3x5_3_p( // LOWER when toggled to russian layout: same as lower, but masked out characters that cannot be typed (=> unicode?)
+  [R_LOWER] = LAYOUT_split_3x5_3_p( // LOWER layer, when activated from RPE (russian layout): same as LOWER, except characters that cannot be typed + extra russian characters (э ё ю я ь ъ щ)
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_MINUS,     XXXXXXX,      XXXXXXX,      KC_AMPR,            _______,                                                _______,            XXXXXXX,          KC_ASTERISK,   KC_PIPE, /*/*/ XXXXXXX,
+      KC_EXLM,      XXXXXXX,      XXXXXXX,      KC_AMPR,            _______,                                                _______,            XXXXXXX,          KC_ASTERISK,   KC_PIPE, /*/*/ XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_PERC,                                                XXXXXXX,            KC_DOLLAR,/*;*/   XXXXXXX,       XXXXXXX,       KC_AT,   /*"*/
+      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_PERC,                                                XXXXXXX,            KC_DOLLAR,/*;*/   XXXXXXX,       XXXXXXX,       KC_AT,   /*"*/
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_EXLM,      XXXXXXX,      XXXXXXX,      XXXXXXX,            KC_UNDS,                                                _______,            KC_CIRC,  /*:*/   XXXXXXX,       KC_BSLASH,     XXXXXXX,
+      KC_PLUS,      XXXXXXX,      XXXXXXX,      XXXXXXX,            KC_UNDS,                                                _______,            KC_CIRC,  /*:*/   XXXXXXX,       KC_BSLASH,     XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
       XXXXXXX,                    KC_HASH, /*№*/      _______,      _______,     XXXXXXX,               XXXXXXX,            _______,            _______,          XXXXXXX,                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
@@ -159,13 +159,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
+  // TG(NUM) does not work
   [NUM] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_MINUS,     KC_7,         KC_8,         KC_9,               KC_SLASH,                                               LCTL(KC_Q),         LCTL(KC_L),       LCTL(KC_D),    LCTL(KC_W),    LCTL(KC_V),
+      KC_DOT,       KC_7,         KC_8,         KC_9,               KC_SLASH,                                               LCTL(KC_Q),         LCTL(KC_L),       LCTL(KC_D),    LCTL(KC_W),    LCTL(KC_V),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      KC_4,         KC_5,         KC_6,               KC_EQUAL,                                               LCTL(KC_DOT),       LCTL(KC_H),       LCTL(KC_T),    LCTL(KC_S),    LCTL(KC_N),
+      KC_MINUS,     KC_4,         KC_5,         KC_6,               KC_EQUAL,                                               LCTL(KC_DOT),       LCTL(KC_H),       LCTL(KC_T),    LCTL(KC_S),    LCTL(KC_N),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      TG(NUM),      KC_1,         KC_2,         KC_3,               KC_ASTR,                                                LCTL(KC_QUOTE),     LCTL(KC_R),       LCTL(KC_M),    LCTL(KC_F),    LCTL(KC_P),
+      KC_PLUS,      KC_1,         KC_2,         KC_3,               KC_ASTR,                                                LCTL(KC_QUOTE),     LCTL(KC_R),       LCTL(KC_M),    LCTL(KC_F),    LCTL(KC_P),
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
       XXXXXXX,                    KC_DOT,       KC_0,               KC_SPACE,    XXXXXXX,               XXXXXXX,            XXXXXXX,            XXXXXXX,          XXXXXXX,                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
