@@ -22,27 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "layouts.h"
 #include <stdio.h>
 
-enum {
-  TD_RAISE
-};
-
-enum layer_id {
-  ENGRAM,
-  QWERTY,
-  RPE,      // russian phonetic engram
-//  RPE_EXT,  // russian phonetic engram extra characters
-  LOWER,
-  R_LOWER,  // lower layer (special chars), invoked from russian layout
-  MULTI,
-  MOUSE,
-  FUNC,
-  NUM,
-  NAV2,
-  C_NAV,
-  S_NAV2,
-  CS_NAV
-};
-
 
 #define C_S(kc) (QK_LCTL | QK_LSFT| (kc))
 
@@ -198,27 +177,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ////  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
 //),
 
+  // // TD_SINGLE_TAP_THEN_HOLD
   [S_NAV2] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,      
+      A_S(KC_LEFT), A_S(KC_DOWN), A_S(KC_UP),   A_S(KC_RIGHT),      XXXXXXX,                                                XXXXXXX,            A_S(KC_HOME),     A_S(KC_PGDOWN),A_S(KC_PGUP),  A_S(KC_END),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            S(KC_LEFT),       S(KC_DOWN),    S(KC_UP),      S(KC_RIGHT),  
+      C_S(KC_LEFT), C_S(KC_DOWN), C_S(KC_UP),   C_S(KC_RIGHT),      C_S(KC_C),                                              C_S(KC_V),          S(KC_LEFT),       S(KC_DOWN),    S(KC_UP),      S(KC_RIGHT),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            S(KC_HOME),       S(KC_PGDOWN),  S(KC_PGUP),    S(KC_END),    
+      C_S(KC_HOME), C_S(KC_PGDN), C_S(KC_PGUP), C_S(KC_END),        C_S(KC_Z),                                              XXXXXXX,            S(KC_HOME),       S(KC_PGDOWN),  S(KC_PGUP),    S(KC_END),
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    XXXXXXX,      XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            TT(CS_NAV),         XXXXXXX,          XXXXXXX,                      XXXXXXX
+      XXXXXXX,                    XXXXXXX,      XXXXXXX,            KC_ALT_ERASE, XXXXXXX,               XXXXXXX,           XXXXXXX,            TT(S_NAV2),       C_S(KC_BSPC),                 XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
-  [CS_NAV] = LAYOUT_split_3x5_3_p(
-  //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,      
-  //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            C_S(KC_LEFT),     C_S(KC_DOWN),  C_S(KC_UP),    C_S(KC_RIGHT),
-  //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            C_S(KC_HOME),     C_S(KC_PGDOWN),C_S(KC_PGUP),  C_S(KC_END),  
-  //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    XXXXXXX,      XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            XXXXXXX,            XXXXXXX,          XXXXXXX,                      XXXXXXX
-  //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
-  )
+//[CS_NAV] = LAYOUT_split_3x5_3_p(
+////,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
+//    XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,
+////|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
+//    XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            C_S(KC_LEFT),     C_S(KC_DOWN),  C_S(KC_UP),    C_S(KC_RIGHT),
+////|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
+//    XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            C_S(KC_HOME),     C_S(KC_PGDOWN),C_S(KC_PGUP),  C_S(KC_END),
+////|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
+//    XXXXXXX,                    XXXXXXX,      XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            XXXXXXX,            XXXXXXX,          XXXXXXX,                      XXXXXXX
+////  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
+//)
 };
