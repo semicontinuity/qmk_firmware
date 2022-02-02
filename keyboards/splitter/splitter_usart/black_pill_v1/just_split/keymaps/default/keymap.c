@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "keymap.h"
+
 #include QMK_KEYBOARD_H
 #include "casemodes.h"
 #include "layouts.h"
@@ -125,13 +127,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [MULTI] = LAYOUT_split_3x5_3_p(
   //--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-     LCTL(KC_B),   LCTL(KC_Y),   LCTL(KC_O),   LCTL(KC_U),         LCTL(KC_Q),                                             TG(QWERTY),         XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,
+     LCTL(KC_B),   LCTL(KC_Y),   LCTL(KC_O),   LCTL(KC_U),         LCTL(KC_Q),                                             KC_PQUEUE,          KC_LINKED,        KC_ARRAY,      KC_LIST,       KC_DEQUEUE,
   //-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-     LCTL(KC_C),   LCTL(KC_I),   LCTL(KC_E),   LCTL(KC_A),         C(KC_COMM),                                             XXXXXXX,            KC_MPRV,          KC_VOLD,       KC_VOLU,       KC_MNXT,
+     LCTL(KC_C),   LCTL(KC_I),   LCTL(KC_E),   LCTL(KC_A),         C(KC_COMM),                                             KC_COMP,            KC_LT,            KC_COMMA,      KC_SPACE,      KC_GT,
   //-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-     LCTL(KC_G),   LCTL(KC_X),   LCTL(KC_J),   LCTL(KC_K),         C(KC_SCLN),                                             XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,
+     LCTL(KC_G),   LCTL(KC_X),   LCTL(KC_J),   LCTL(KC_K),         C(KC_SCLN),                                             KC_ENTRY,           KC_TREE,          KC_HASH_,      KC_MAP,        KC_SET,
   //-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-     XXXXXXX,                    XXXXXXX,      XXXXXXX,            XXXXXXX,     XXXXXXX,               XXXXXXX,            KC_MEDIA_STOP,      KC_MPLY,          KC_MUTE,                      XXXXXXX
+     XXXXXXX,                    XXXXXXX,      C_S(KC_C),          C_S(KC_V),   TG(QWERTY),            KC_NEW,             KC_INT,             KC_STR,           KC_CHAR,                      XXXXXXX
   // =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
