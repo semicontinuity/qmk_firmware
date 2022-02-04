@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 8
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
 #define MATRIX_COLS 5
+#define FLIP_COLS
 
 #define DIRECT_PINS {\
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
