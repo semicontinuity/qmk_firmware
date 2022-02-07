@@ -85,7 +85,11 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 //            }
             break;
         case TD_SINGLE_LONG_TAP:
-//            send_led_state(LED_STATE_NAV_LOCK);
+            kb_half_send_byte(1, 0x00);
+            kb_half_send_byte(1, 0xFF);
+            kb_half_send_byte(1, 0xFF);
+            kb_half_send_byte(1, 0x00);
+
             layer_on(NAV2);
             break;
         case TD_SINGLE_HOLD:
@@ -209,7 +213,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
-//        send_led_state(0);
+
+        kb_half_send_byte(1, 0x00);
+        kb_half_send_byte(1, 0x00);
+        kb_half_send_byte(1, 0x00);
+        kb_half_send_byte(1, 0x00);
+
         return false;
     }
 

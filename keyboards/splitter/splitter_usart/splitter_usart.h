@@ -25,3 +25,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_STATE_NAV_LOCK 4
 
 void send_led_state(uint8_t state);
+
+void kb_half_send_byte(bool right_half, uint8_t value);

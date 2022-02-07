@@ -134,3 +134,7 @@ void send_led_state(uint8_t state) {
     uart_putchar(&SD_LEFT, state);
     uart_putchar(&SD_RIGHT, state);
 }
+
+void kb_half_send_byte(bool right_half, uint8_t value) {
+    uart_putchar(right_half ? &SD_RIGHT : &SD_LEFT, value);
+}
