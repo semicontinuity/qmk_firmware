@@ -24,13 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_COLS 5
 #define FLIP_COLS
 
+// PB3 is SDA2
+// PB1: seems to be wrongly connected on the board; should have been PB10=SCL2
 #define DIRECT_PINS {\
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ B3,     NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
+{ B1,     NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
 }
