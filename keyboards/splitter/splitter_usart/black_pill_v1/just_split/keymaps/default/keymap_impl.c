@@ -1,5 +1,27 @@
 #include "keymap.h"
 
+void nav_lock__on(void) {
+    kb_half_send_byte(0, 0xFF);
+    kb_half_send_byte(0, 0xFF);
+    kb_half_send_byte(0, 0x00);
+    kb_half_send_byte(0, 0x00);
+    kb_half_send_byte(1, 0xFF);
+    kb_half_send_byte(1, 0xFF);
+    kb_half_send_byte(1, 0x00);
+    kb_half_send_byte(1, 0x00);
+}
+
+void nav_lock__off(void) {
+    kb_half_send_byte(0, 0x00);
+    kb_half_send_byte(0, 0x00);
+    kb_half_send_byte(0, 0x00);
+    kb_half_send_byte(0, 0x00);
+    kb_half_send_byte(1, 0x00);
+    kb_half_send_byte(1, 0x00);
+    kb_half_send_byte(1, 0x00);
+    kb_half_send_byte(1, 0x00);
+}
+
 bool raise_active = false;
 uint16_t raise_activation_time16 = 0;
 uint32_t raise_activation_time = 0;
@@ -85,11 +107,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 //            }
             break;
         case TD_SINGLE_LONG_TAP:
-            kb_half_send_byte(1, 0x00);
-            kb_half_send_byte(1, 0xFF);
-            kb_half_send_byte(1, 0xFF);
-            kb_half_send_byte(1, 0x00);
-
+            nav_lock__on();
             layer_on(NAV2);
             break;
         case TD_SINGLE_HOLD:
@@ -213,12 +231,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
-
-        kb_half_send_byte(1, 0x00);
-        kb_half_send_byte(1, 0x00);
-        kb_half_send_byte(1, 0x00);
-        kb_half_send_byte(1, 0x00);
-
+        nav_lock__off();
         return false;
     }
 
