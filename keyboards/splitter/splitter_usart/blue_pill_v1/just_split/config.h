@@ -25,13 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define FLIP_COLS
 
+// "A1" works, "A0" does not (no pull-up voltage)
+// Not sure: perhaps A0 must be in the first line?
 #define DIRECT_PINS {\
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ A0,     NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
+{ A1,     NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
 }

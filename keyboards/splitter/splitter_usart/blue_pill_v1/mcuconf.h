@@ -23,7 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ONBOARD_LED_PAD 13
  
 #define SD_LEFT SD1
+//#define SD_LEFT_TX_PORT GPIOA
+//#define SD_LEFT_TX_PAD 9
+//#define SD_LEFT_RX_PORT GPIOA
+//#define SD_LEFT_RX_PAD 10
+
 #define SD_RIGHT SD3
+//#define SD_RIGHT_TX_PORT GPIOB
+//#define SD_RIGHT_TX_PAD 10
+//#define SD_RIGHT_RX_PORT GPIOB
+//#define SD_RIGHT_RX_PAD 11
 
 #undef STM32_SERIAL_USE_USART1
 #define STM32_SERIAL_USE_USART1 TRUE
