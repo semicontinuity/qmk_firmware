@@ -1,25 +1,22 @@
 #include "keymap.h"
 
-void nav_lock__on(void) {
-    kb_half_send_byte(0, 0xFF);
-    kb_half_send_byte(0, 0xFF);
-    kb_half_send_byte(0, 0x00);
-    kb_half_send_byte(0, 0x00);
-    kb_half_send_byte(1, 0xFF);
-    kb_half_send_byte(1, 0xFF);
-    kb_half_send_byte(1, 0x00);
-    kb_half_send_byte(1, 0x00);
-}
 
-void nav_lock__off(void) {
-    kb_half_send_byte(0, 0x00);
-    kb_half_send_byte(0, 0x00);
-    kb_half_send_byte(0, 0x00);
-    kb_half_send_byte(0, 0x00);
-    kb_half_send_byte(1, 0x00);
-    kb_half_send_byte(1, 0x00);
-    kb_half_send_byte(1, 0x00);
-    kb_half_send_byte(1, 0x00);
+bool nav_loc_active = false;
+
+
+void indicate(bool nav_lock, bool shift_lock) {
+    uint8_t b01 = nav_lock ? 0xFF : 0x00;
+    uint8_t b23 = shift_lock ? 0xFF : 0x00;
+
+    kb_half_send_byte(0, b01);
+    kb_half_send_byte(0, b01);
+    kb_half_send_byte(0, b23);
+    kb_half_send_byte(0, b23);
+
+    kb_half_send_byte(1, b01);
+    kb_half_send_byte(1, b01);
+    kb_half_send_byte(1, b23);
+    kb_half_send_byte(1, b23);
 }
 
 bool raise_active = false;
@@ -107,7 +104,8 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 //            }
             break;
         case TD_SINGLE_LONG_TAP:
-            nav_lock__on();
+            nav_loc_active = true;
+            indicate(true, false);
             layer_on(NAV2);
             break;
         case TD_SINGLE_HOLD:
@@ -120,6 +118,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
             toggle_caps_word();
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
+            layer_on(NAV2);
             layer_on(S_NAV2);
             break;
         case TD_NONE:
@@ -151,6 +150,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
 //            layer_off(C_NAV);
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
+            layer_off(NAV2);
             layer_off(S_NAV2);
 //            layer_off(CS_NAV);
             break;
@@ -226,12 +226,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
 
+    if (keycode == KC_EXSEL && record->event.pressed) {
+        // KC_EXSEL is a dummy keycode, to indicate, Shift layer has to be toggled
+        // Assume that NAV2 layer is locked.
+        if (layer_state_is(S_NAV2)) {
+            layer_off(S_NAV2);
+            if (nav_loc_active) indicate(true, false);
+        } else {
+            layer_on(S_NAV2);
+            if (nav_loc_active) indicate(true, true);
+        }
+        return false;
+    }
+
     if (keycode == KC_ALT_ERASE) {
         // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
-        nav_lock__off();
+        indicate(false, false);
+        nav_loc_active = false;
         return false;
     }
 
