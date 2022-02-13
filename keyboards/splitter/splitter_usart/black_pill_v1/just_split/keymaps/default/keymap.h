@@ -26,6 +26,7 @@ enum layer_id {
 //  CS_NAV
   F_A,      // Alt+Function keys
   F_C,      // Ctrl+Function keys
+  F_S,      // Shift+Function keys
 };
 
 enum custom_keycodes {

@@ -227,7 +227,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
     if (keycode == KC_EXSEL && record->event.pressed) {
-        // KC_EXSEL is a dummy keycode, to indicate, Shift layer has to be toggled
+        // KC_EXSEL is a dummy keycode, to implement Shift locking
         // Assume that NAV2 layer is locked.
         if (layer_state_is(S_NAV2)) {
             layer_off(S_NAV2);
