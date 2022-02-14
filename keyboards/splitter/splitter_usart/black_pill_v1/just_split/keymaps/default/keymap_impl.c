@@ -176,7 +176,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
  * If returns false QMK will skip the normal key handling, and it will be up to you to send any key up or down events that are required.
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
+    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
 
     // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
     uint16_t nav_layer_remapped_key = 0;
@@ -225,6 +225,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
+    if (keycode == TT(S_NAV2)) {
+//        uprintf("keycode == TT(S_NAV2), layer_state_is(S_NAV2): %d, pressed: %d\n", layer_state_is(S_NAV2), record->event.pressed);
+        // Assume that NAV2 layer is locked.
+        if (!layer_state_is(S_NAV2) && !record->event.pressed) {
+//            uprintf("S_NAV2 off -> on\n");
+            indicate(true, true);
+        }
+
+        if (layer_state_is(S_NAV2) && record->event.pressed) {
+//            uprintf("S_NAV2 on -> off\n");
+            indicate(nav_loc_active, false);
+        }
+
+        return true;
+    }
+/*
 
     if (keycode == KC_EXSEL && record->event.pressed) {
         // KC_EXSEL is a dummy keycode, to implement Shift locking
@@ -238,6 +254,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
     }
+*/
 
     if (keycode == KC_ALT_ERASE) {
         // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
