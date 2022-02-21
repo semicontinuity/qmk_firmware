@@ -135,6 +135,52 @@ void send_led_state(uint8_t state) {
     uart_putchar(&SD_RIGHT, state);
 }
 
+
+uint8_t locks;
+
+
+void set_lock(const uint8_t lock, bool on) {
+    if (on) {
+        locks |= lock;
+    } else {
+        locks &= ~lock;
+    }
+}
+
+
 void kb_half_send_byte(bool right_half, uint8_t value) {
     uart_putchar(right_half ? &SD_RIGHT : &SD_LEFT, value);
+}
+
+void kb_half_set_backlight_leds(bool right_half, uint8_t r, uint8_t g, uint8_t b) {
+    kb_half_send_byte(right_half, 0x9E);
+    kb_half_send_byte(right_half, g);
+    kb_half_send_byte(right_half, r);
+    kb_half_send_byte(right_half, b);
+}
+
+void set_backlight_leds(uint8_t r, uint8_t g, uint8_t b) {
+    kb_half_set_backlight_leds(false, r, g, b);
+    kb_half_set_backlight_leds(true, r, g, b);
+}
+
+void indicate(void) {
+    /*
+        uint8_t b01 = nav_lock ? 0xFF : 0x00;
+        uint8_t b23 = shift_lock ? 0xFF : 0x00;
+
+        kb_half_send_byte(0, b01);
+        kb_half_send_byte(0, b01);
+        kb_half_send_byte(0, b23);
+        kb_half_send_byte(0, b23);
+
+        kb_half_send_byte(1, b01);
+        kb_half_send_byte(1, b01);
+        kb_half_send_byte(1, b23);
+        kb_half_send_byte(1, b23);
+    */
+    uint8_t b = locks & LOCK_NAV ? 0x80 : 0x00;
+    uint8_t g = locks & LOCK_SHIFT ? 0x80 : 0x00;
+    uint8_t r = locks & LOCK_RUS ? 0x80 : 0x00;
+    set_backlight_leds(r, g, b);
 }

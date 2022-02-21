@@ -22,8 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include <stdbool.h>
 
-#define LED_STATE_NAV_LOCK 4
 
 void send_led_state(uint8_t state);
 
 void kb_half_send_byte(bool right_half, uint8_t value);
+
+void set_backlight_leds(uint8_t r, uint8_t g, uint8_t b);
+
+#define LOCK_NAV 0x01
+#define LOCK_SHIFT 0x02
+#define LOCK_NUM 0x04
+#define LOCK_RUS 0x08
+
+void set_lock(uint8_t lock, bool on);
+void indicate(void);

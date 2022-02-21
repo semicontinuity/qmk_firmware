@@ -1,24 +1,5 @@
 #include "keymap.h"
 
-
-bool nav_loc_active = false;
-
-
-void indicate(bool nav_lock, bool shift_lock) {
-    uint8_t b01 = nav_lock ? 0xFF : 0x00;
-    uint8_t b23 = shift_lock ? 0xFF : 0x00;
-
-    kb_half_send_byte(0, b01);
-    kb_half_send_byte(0, b01);
-    kb_half_send_byte(0, b23);
-    kb_half_send_byte(0, b23);
-
-    kb_half_send_byte(1, b01);
-    kb_half_send_byte(1, b01);
-    kb_half_send_byte(1, b23);
-    kb_half_send_byte(1, b23);
-}
-
 bool raise_active = false;
 uint16_t raise_activation_time16 = 0;
 uint32_t raise_activation_time = 0;
@@ -104,8 +85,8 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 //            }
             break;
         case TD_SINGLE_LONG_TAP:
-            nav_loc_active = true;
-            indicate(true, false);
+            set_lock(LOCK_NAV, true);
+            indicate();
             layer_on(NAV2);
             break;
         case TD_SINGLE_HOLD:
@@ -230,12 +211,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // Assume that NAV2 layer is locked.
         if (!layer_state_is(S_NAV2) && !record->event.pressed) {
 //            uprintf("S_NAV2 off -> on\n");
-            indicate(true, true);
+            set_lock(LOCK_SHIFT, true);
+            indicate();
         }
 
         if (layer_state_is(S_NAV2) && record->event.pressed) {
 //            uprintf("S_NAV2 on -> off\n");
-            indicate(nav_loc_active, false);
+            set_lock(LOCK_SHIFT, false);
+            indicate();
         }
 
         return true;
@@ -261,8 +244,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
-        indicate(false, false);
-        nav_loc_active = false;
+        set_lock(LOCK_NAV, false);
+        set_lock(LOCK_SHIFT, false);
+        indicate();
         return false;
     }
 
