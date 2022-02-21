@@ -179,8 +179,8 @@ void indicate(void) {
         kb_half_send_byte(1, b23);
         kb_half_send_byte(1, b23);
     */
-    uint8_t b = locks & LOCK_NAV ? 0x80 : 0x00;
-    uint8_t g = locks & LOCK_SHIFT ? 0x80 : 0x00;
+    uint8_t g = locks & LOCK_NAV ? 0x80 : 0x00;
+    uint8_t b = locks & LOCK_SHIFT ? 0x80 : 0x00;
     uint8_t r = locks & LOCK_RUS ? 0x80 : 0x00;
     set_backlight_leds(r, g, b);
 }
