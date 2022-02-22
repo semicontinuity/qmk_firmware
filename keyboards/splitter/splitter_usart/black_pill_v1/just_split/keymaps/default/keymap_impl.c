@@ -1,7 +1,6 @@
 #include "keymap.h"
 
 bool raise_active = false;
-
 uint16_t raise_activation_time16 = 0;
 uint32_t raise_activation_time = 0;
 uint32_t nav_layer_pressed_mask = 0;
@@ -44,7 +43,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 
 // Determine the current tap dance state
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
-//    uprintf("cur_dance: now %d, was %d\n", timer_read(), ql_tap_state.press_timestamp);
+    uprintf("cur_dance: now %d, was %d\n", timer_read(), ql_tap_state.press_timestamp);
 
     if (state->count == 1) {
         if (state->pressed) {
@@ -52,10 +51,10 @@ td_state_t cur_dance(qk_tap_dance_state_t *state) {
         } else {
             //        uint16_t elapsed = timer_elapsed(ql_tap_state.press_timestamp);
             uint16_t elapsed = TIMER_DIFF_16(ql_tap_state.release_timestamp, ql_tap_state.press_timestamp);
-//            uprintf("elapsed %d\n", elapsed);
+            uprintf("elapsed %d\n", elapsed);
 
             if (elapsed > 150) {
-//                uprintf("TD_SINGLE_LONG_TAP\n");
+                uprintf("TD_SINGLE_LONG_TAP\n");
                 return TD_SINGLE_LONG_TAP;
             } else {
                 return TD_SINGLE_TAP;
@@ -73,14 +72,9 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
             // Ideally, implement it so that when single tapped, caps lock lights up (how?)
-            set_oneshot_mods(MOD_BIT(KC_LSFT));
-            //            add_oneshot_mods(MOD_MASK_SHIFT);
-//            tap_code(KC_CAPS);
-//            uprintf("OS SHIFT\n");
-
-            // raise_active here ruins one-shot shift
-//            raise_active = true;
-
+            add_oneshot_mods(MOD_MASK_SHIFT);
+            uprintf("OS SHIFT\n");
+            raise_active = true;
 //            raise_activation_time = timer_read32();
 //            raise_activation_time16 = timer_read();
 
@@ -91,7 +85,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 //            }
             break;
         case TD_SINGLE_LONG_TAP:
-//            set_lock(LOCK_NAV, true);
+            set_lock(LOCK_NAV, true);
 //            indicate();
             layer_on(NAV2);
             break;
@@ -117,10 +111,8 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
-            clear_oneshot_mods();
             raise_active = false;
-//            del_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
-//            tap_code(KC_CAPS);
+            del_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
 //            del_oneshot_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
 //            if (layer_state_is(QWERTY)) {
 //                del_mods(MOD_MASK_SHIFT);
@@ -165,8 +157,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
  * If returns false QMK will skip the normal key handling, and it will be up to you to send any key up or down events that are required.
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
-/*
+    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
+
     // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
     uint16_t nav_layer_remapped_key = 0;
     uint32_t nav_layer_mask = 0;
@@ -213,27 +205,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         }
     }
-*/
 
-/*
     if (keycode == TT(S_NAV2)) {
-        uprintf("keycode == TT(S_NAV2), layer_state_is(S_NAV2): %d, pressed: %d\n", layer_state_is(S_NAV2), record->event.pressed);
+//        uprintf("keycode == TT(S_NAV2), layer_state_is(S_NAV2): %d, pressed: %d\n", layer_state_is(S_NAV2), record->event.pressed);
         // Assume that NAV2 layer is locked.
-        if (layer_state_is(S_NAV2) && !record->event.pressed) {
-            uprintf("S_NAV2 off -> on\n");
+        if (!layer_state_is(S_NAV2) && !record->event.pressed) {
+//            uprintf("S_NAV2 off -> on\n");
             set_lock(LOCK_SHIFT, true);
-            indicate();
+//            indicate();
         }
 
         if (layer_state_is(S_NAV2) && record->event.pressed) {
-            uprintf("S_NAV2 on -> off\n");
+//            uprintf("S_NAV2 on -> off\n");
             set_lock(LOCK_SHIFT, false);
-            indicate();
+//            indicate();
         }
 
         return true;
     }
-*/
 /*
 
     if (keycode == KC_EXSEL && record->event.pressed) {
@@ -250,13 +239,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 */
 
-    if (keycode == KC_ALT_ERASE && record->event.pressed) {
+    if (keycode == KC_ALT_ERASE) {
         // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
-//        set_lock(LOCK_NAV, false);
-//        set_lock(LOCK_SHIFT, false);
+        set_lock(LOCK_NAV, false);
+        set_lock(LOCK_SHIFT, false);
 //        indicate();
         return false;
     }
@@ -290,13 +279,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true;
 
     case KC_SPACE:    //
-//        uprintf("KC_SPACE\n");
+        uprintf("KC_SPACE\n");
         if (mod_state == 8 && record->event.pressed) {
           if (layer_state_is(RPE)) {
-//            uprintf("russian off\n");
+            uprintf("russian off\n");
             layer_off(RPE);
           } else {
-//            uprintf("russian on\n");
+            uprintf("russian on\n");
             layer_on(RPE);
           }
         }
@@ -373,7 +362,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-
 layer_state_t cur_layer_state = 0;
 layer_state_t new_layer_state;
 
@@ -392,7 +380,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return new_layer_state = state;
 }
 
-/*
 void housekeeping_task_user(void) {
     uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
 
@@ -415,8 +402,7 @@ void housekeeping_task_user(void) {
                 break;
         }
 
-        cur_leds = leds;
+        cur_leds        = leds;
         cur_layer_state = new_layer_state;
     }
 }
-*/

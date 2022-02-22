@@ -182,6 +182,5 @@ void indicate(void) {
     uint8_t g = locks & LOCK_NAV ? 0x80 : 0x00;
     uint8_t b = locks & LOCK_SHIFT ? 0x80 : 0x00;
     uint8_t r = locks & LOCK_RUS ? 0x80 : 0x00;
-    uprintf("Locks: %02X; R=%02X G=%02X B=%02X, indicate\n", locks, r, g, b);
     set_backlight_leds(r, g, b);
 }
