@@ -98,11 +98,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [R_LOWER] = LAYOUT_split_3x5_3_p( // LOWER layer, when activated from RPE (russian layout): same as LOWER, except characters that cannot be typed + extra russian characters (э ё ю я ь ъ щ)
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_EXLM,      KC_QUOT,/*э*/ KC_GRV,/*ё*/  KC_DOT,  /*ю*/      KC_CIRC,                                                _______,            XXXXXXX,          XXXXXXX,       KC_PIPE, /*/*/ XXXXXXX,
+      KC_EXLM,      KC_QUOT,/*э*/ KC_GRV,/*ё*/  KC_DOT,  /*ю*/      KC_CIRC,                                                _______,            XXXXXXX,          XXXXXXX,       KC_O,   /*щ*/  XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
       KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_DOLLAR,/*;*/   KC_M,   /*ь*/  KC_RBRC,/*ъ*/  KC_AT,   /*"*/
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      XXXXXXX,      XXXXXXX,      XXXXXXX,            KC_1,                                                   KC_3,               KC_CIRC,  /*:*/   XXXXXXX,       KC_PERC,       XXXXXXX,
+      KC_PLUS,      KC_ASTERISK,  KC_PIPE,/*/*/ KC_Z,    /*я*/      KC_1,                                                   KC_3,               KC_CIRC,  /*:*/   XXXXXXX,       KC_PERC,       XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
       XXXXXXX,                    KC_HASH,/*№*/ KC_SPACE,           KC_UNDS,     XXXXXXX,               XXXXXXX,            KC_BSLASH,          KC_QUES,  /*,*/   XXXXXXX,                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
