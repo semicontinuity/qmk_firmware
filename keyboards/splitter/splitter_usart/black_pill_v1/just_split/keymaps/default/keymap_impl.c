@@ -6,6 +6,12 @@ uint32_t raise_activation_time = 0;
 uint32_t nav_layer_pressed_mask = 0;
 
 
+// Stopwatch
+
+uint32_t stopwatch_start_ts = 0;
+uint32_t unit_minutes = 0;
+int16_t cur_time_slot = -1;
+
 // Tap dance
 
 typedef enum {
@@ -151,6 +157,16 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_RAISE] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, TAPPING_TERM)
 };
 
+
+void start_stop_stopwatch(uint16_t unit) {
+    if (unit_minutes == unit && stopwatch_start_ts) {
+        stopwatch_start_ts = 1L;
+        cur_time_slot = -1;
+    } else {
+        stopwatch_start_ts = timer_read32();
+        unit_minutes       = unit;
+    }
+}
 
 /**
  * If returns true QMK will process the keycodes as usual.
@@ -311,6 +327,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
 */
+      
+    // stopwatch_start_ts == 1L will make it expired (to stop and re-display)
+      
+    case KC_SWATCH1: // 15 min
+        if (record->event.pressed) start_stop_stopwatch(1);
+        break;
+    case KC_SWATCH2: // 30 min
+        if (record->event.pressed) start_stop_stopwatch(2);
+        break;
+    case KC_SWATCH3: // 60 min
+        if (record->event.pressed) start_stop_stopwatch(4);
+        break;
     }
 
     if (record->event.pressed) {
@@ -384,7 +412,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return new_layer_state = state;
 }
 
-void housekeeping_task_user(void) {
+void backlight(void) {
     uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
 
     if (new_layer_state != cur_layer_state || leds != cur_leds) {
@@ -409,4 +437,50 @@ void housekeeping_task_user(void) {
         cur_leds        = leds;
         cur_layer_state = new_layer_state;
     }
+}
+
+
+// "Stopwatch" using 16 Red/Green LEDs
+void stopwatch(void) {
+    if (stopwatch_start_ts > 0) {
+
+        if (stopwatch_start_ts == 1) {
+            stopwatch_start_ts = 0;
+            set_led_bars(0, 0);
+            return;
+        }
+
+        uint32_t elapsed = timer_elapsed32(stopwatch_start_ts);
+        int16_t time_slot = elapsed / 60000 / unit_minutes;
+
+        if (time_slot != cur_time_slot) {
+            cur_time_slot = time_slot;
+
+            uint16_t pattern_r = 0;
+            uint16_t pattern_g = 0;
+            uint16_t pattern = 1U << time_slot;
+            if (time_slot >= 16) {
+                stopwatch_start_ts = 0;
+                pattern_r = 0;
+                pattern_g = 0;
+            } else if (time_slot == 15) {
+                pattern_r = pattern;
+                pattern_g = 0;
+            } else if (time_slot == 14) {
+                pattern_r = pattern;
+                pattern_g = pattern;
+            } else  {
+                pattern_r = 0;
+                pattern_g = pattern;
+            }
+
+            set_led_bars(pattern_r, pattern_g);
+        }
+    }
+}
+
+
+void housekeeping_task_user(void) {
+    backlight();
+    stopwatch();
 }

@@ -35,4 +35,8 @@ void set_backlight_leds(uint8_t r, uint8_t g, uint8_t b);
 #define LOCK_RUS 0x08
 
 void set_lock(uint8_t lock, bool on);
-void indicate(void);
+
+
+
+void kb_half_set_led_bar(bool right_half, uint16_t r, uint16_t g);
+void set_led_bars(uint16_t r, uint16_t g);

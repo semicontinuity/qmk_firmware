@@ -44,5 +44,9 @@ enum custom_keycodes {
     KC_TREE,
     KC_HASH_,
     KC_MAP,
-    KC_SET
+    KC_SET,
+
+    KC_SWATCH1,
+    KC_SWATCH2,
+    KC_SWATCH3
 };
