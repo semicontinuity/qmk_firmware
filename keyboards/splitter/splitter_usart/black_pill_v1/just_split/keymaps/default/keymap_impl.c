@@ -263,7 +263,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     //    uprintf("process_record_user\n");
-    uint8_t mod_state = get_mods();
+//    uint8_t mod_state = get_mods();
 //    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
     if (!process_case_modes(keycode, record)) {
         return false;
@@ -277,7 +277,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed && is_oneshot_layer_active())
       clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
       return true;
-
+/*
     case KC_SPACE:    //
         uprintf("KC_SPACE\n");
         if (mod_state == 8 && record->event.pressed) {
@@ -289,7 +289,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             layer_on(RPE);
           }
         }
-        break;
+        break;*/
 /*
     case KC_SPACE:
         uprintf("space\n");
