@@ -176,6 +176,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     if (record->event.key.row == 7) {
         // Right thumb cluster
+        if (record->event.key.col == 4) {
+            nav_layer_remapped_key = KC_QUES;
+            nav_layer_mask         = 1;
+        }
         if (record->event.key.col == 3) {
             nav_layer_remapped_key = KC_COMMA;
             nav_layer_mask         = 1;
@@ -185,7 +189,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             nav_layer_mask         = 1;
         }
         if (record->event.key.col == 1) {
-            nav_layer_remapped_key = KC_QUES;
+            nav_layer_remapped_key = C(KC_BSPC);
             nav_layer_mask         = 1;
         }
     }
