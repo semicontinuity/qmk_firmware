@@ -11,6 +11,7 @@ uint32_t unit_minutes = 0;
 int16_t cur_time_slot = -1;
 
 // Turbo
+#include "wpm.h"
 bool turbo = false;
 
 // Tap dance
@@ -167,6 +168,21 @@ void start_stop_stopwatch(uint16_t unit) {
         stopwatch_start_ts = timer_read32();
         unit_minutes       = unit;
     }
+}
+
+
+bool is_turbo_affected_key(uint16_t keycode) {
+    if (turbo) {
+        if (keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) {
+            return true;
+        } else if (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) {
+            uint16_t layer = (keycode >> 8U) & 0xFU;
+            if (layer >= F_A) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -391,8 +407,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
 
             case KC_TURBO:
+                turbo = !turbo;
                 break;
         }
+    }
+
+    // Remove MT from alpha keys in TURBO mode
+    if (is_turbo_affected_key(keycode)) {
+        uint16_t simple_code = keycode & 0xFF;
+        if (record->event.pressed) register_code(simple_code); else unregister_code(simple_code);
+        return false;
     }
 
     return true;
