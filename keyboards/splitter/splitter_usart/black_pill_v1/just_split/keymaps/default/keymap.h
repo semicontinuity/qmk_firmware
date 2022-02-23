@@ -48,5 +48,7 @@ enum custom_keycodes {
 
     KC_SWATCH1,
     KC_SWATCH2,
-    KC_SWATCH3
+    KC_SWATCH3,
+
+    KC_TURBO
 };

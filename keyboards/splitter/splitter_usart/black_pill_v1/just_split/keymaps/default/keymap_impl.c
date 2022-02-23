@@ -5,12 +5,13 @@ uint16_t raise_activation_time16 = 0;
 uint32_t raise_activation_time = 0;
 uint32_t nav_layer_pressed_mask = 0;
 
-
 // Stopwatch
-
 uint32_t stopwatch_start_ts = 0;
 uint32_t unit_minutes = 0;
 int16_t cur_time_slot = -1;
+
+// Turbo
+bool turbo = false;
 
 // Tap dance
 
@@ -289,6 +290,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
+
     switch (keycode) {
 
     case KC_TRNS:
@@ -327,18 +329,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
 */
-      
-    // stopwatch_start_ts == 1L will make it expired (to stop and re-display)
-      
-    case KC_SWATCH1: // 15 min
-        if (record->event.pressed) start_stop_stopwatch(1);
-        break;
-    case KC_SWATCH2: // 30 min
-        if (record->event.pressed) start_stop_stopwatch(2);
-        break;
-    case KC_SWATCH3: // 60 min
-        if (record->event.pressed) start_stop_stopwatch(4);
-        break;
     }
 
     if (record->event.pressed) {
@@ -387,6 +377,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
             case KC_SET:
                 SEND_STRING("Set");
+                break;
+
+            // stopwatch_start_ts == 1L will make it expired (to stop and re-display)
+            case KC_SWATCH1: // 15 min
+                start_stop_stopwatch(1);
+                break;
+            case KC_SWATCH2: // 30 min
+                start_stop_stopwatch(2);
+                break;
+            case KC_SWATCH3: // 60 min
+                start_stop_stopwatch(4);
+                break;
+
+            case KC_TURBO:
                 break;
         }
     }
