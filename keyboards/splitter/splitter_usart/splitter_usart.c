@@ -32,6 +32,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "print.h"
 
 
+inline void board_led_1_init(void) {
+    palSetPadMode(ONBOARD_LED_PORT, ONBOARD_LED_PAD, PAL_MODE_OUTPUT_PUSHPULL);
+}
+
+inline void board_led_1_on(void) {
+    palClearPad(ONBOARD_LED_PORT, ONBOARD_LED_PAD);
+}
+
+inline void board_led_1_off(void) {
+    palSetPad(ONBOARD_LED_PORT, ONBOARD_LED_PAD);
+}
+
+
 extern matrix_row_t matrix[MATRIX_ROWS];
 
 
@@ -110,6 +123,9 @@ void matrix_init_kb(void) {
 
 
 void matrix_init_user(void) {
+    board_led_1_init();
+    board_led_1_off();
+
     // Ideally, configure UART pads with pull-ups, for disconnected not to register false data (unconnected pad reads 0)
 #if defined(SD_LEFT_TX_PORT) && defined(SD_LEFT_TX_PAD) && defined(SD_LEFT_RX_PORT) && defined(SD_LEFT_RX_PAD)
     palSetPadMode(SD_LEFT_TX_PORT, SD_LEFT_TX_PAD, PAL_MODE_ALTERNATE(7));

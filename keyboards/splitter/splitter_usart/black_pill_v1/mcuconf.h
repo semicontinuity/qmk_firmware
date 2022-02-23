@@ -2,6 +2,9 @@
 
 #include_next <mcuconf.h>
 
+#define ONBOARD_LED_PORT GPIOC
+#define ONBOARD_LED_PAD 13
+
 #define SD_LEFT SD1
 #define SD_LEFT_TX_PORT GPIOB
 #define SD_LEFT_TX_PAD 6

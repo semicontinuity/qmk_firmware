@@ -23,6 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 
+void board_led_1_init(void);
+void board_led_1_on(void);
+void board_led_1_off(void);
+
+
 void send_led_state(uint8_t state);
 
 void kb_half_send_byte(bool right_half, uint8_t value);

@@ -1,3 +1,6 @@
 #pragma once
 
 #define TAPPING_TOGGLE 1
+#define TURBO_AUTO_THRESHOLD_WPM 30
+#define WPM_SAMPLE_SECONDS 2
+#define WPM_SAMPLE_PERIODS 16

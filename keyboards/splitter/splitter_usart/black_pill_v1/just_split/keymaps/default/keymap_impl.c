@@ -5,14 +5,24 @@ uint16_t raise_activation_time16 = 0;
 uint32_t raise_activation_time = 0;
 uint32_t nav_layer_pressed_mask = 0;
 
+
 // Stopwatch
 uint32_t stopwatch_start_ts = 0;
 uint32_t unit_minutes = 0;
 int16_t cur_time_slot = -1;
 
+
 // Turbo
 #include "wpm.h"
-bool turbo = false;
+
+enum turbo_mode_t {
+    TURBO_OFF,
+    TURBO_AUTO,
+    TURBO_ON
+};
+
+uint32_t turbo_mode = TURBO_OFF;
+
 
 // Tap dance
 
@@ -171,15 +181,17 @@ void start_stop_stopwatch(uint16_t unit) {
 }
 
 
+bool is_turbo_active(void) {
+    return (turbo_mode == TURBO_ON || (turbo_mode == TURBO_AUTO && get_current_wpm() > TURBO_AUTO_THRESHOLD_WPM));
+}
+
 bool is_turbo_affected_key(uint16_t keycode) {
-    if (turbo) {
-        if (keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) {
+    if (keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) {
+        return true;
+    } else if (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) {
+        uint16_t layer = (keycode >> 8U) & 0xFU;
+        if (layer >= F_A) {
             return true;
-        } else if (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) {
-            uint16_t layer = (keycode >> 8U) & 0xFU;
-            if (layer >= F_A) {
-                return true;
-            }
         }
     }
     return false;
@@ -407,20 +419,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
 
             case KC_TURBO:
-                turbo = !turbo;
+                turbo_mode = (turbo_mode + 1) % 3;
                 break;
         }
     }
 
-    // Remove MT from alpha keys in TURBO mode
-    if (is_turbo_affected_key(keycode)) {
-        uint16_t simple_code = keycode & 0xFF;
-        if (record->event.pressed) register_code(simple_code); else unregister_code(simple_code);
-        return false;
+
+    if (is_turbo_active()) {
+        board_led_1_on();
+
+        if (is_turbo_affected_key(keycode)) {
+            uint16_t simple_code = keycode & 0xFF;
+            if (record->event.pressed)
+                register_code(simple_code);
+            else
+                unregister_code(simple_code);
+            return false;
+        }
+    } else {
+        board_led_1_off();
     }
 
     return true;
 }
+
+// Backlight
+// =============================================================================================================
 
 layer_state_t cur_layer_state = 0;
 layer_state_t new_layer_state;
@@ -469,6 +493,8 @@ void backlight(void) {
 
 
 // "Stopwatch" using 16 Red/Green LEDs
+// =============================================================================================================
+
 void stopwatch(void) {
     if (stopwatch_start_ts > 0) {
 
@@ -507,6 +533,7 @@ void stopwatch(void) {
     }
 }
 
+// =============================================================================================================
 
 void housekeeping_task_user(void) {
     backlight();
