@@ -424,10 +424,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
-
+/*
     if (is_turbo_active()) {
         board_led_1_on();
-
+        layer_on(ENGRAM_T);
         if (is_turbo_affected_key(keycode)) {
             uint16_t simple_code = keycode & 0xFF;
             if (record->event.pressed)
@@ -438,7 +438,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     } else {
         board_led_1_off();
+        layer_off(ENGRAM_T);
     }
+*/
 
     return true;
 }
@@ -533,9 +535,28 @@ void stopwatch(void) {
     }
 }
 
+
+// Auto-turbo
+// =============================================================================================================
+
+void auto_turbo(void) {
+    if (is_turbo_active()) {
+        if (!layer_state_is(ENGRAM_T)) {
+            board_led_1_on();
+            layer_on(ENGRAM_T);
+        }
+    } else {
+        if (layer_state_is(ENGRAM_T)) {
+            board_led_1_off();
+            layer_off(ENGRAM_T);
+        }
+    }
+}
+
 // =============================================================================================================
 
 void housekeeping_task_user(void) {
     backlight();
     stopwatch();
+    auto_turbo();
 }

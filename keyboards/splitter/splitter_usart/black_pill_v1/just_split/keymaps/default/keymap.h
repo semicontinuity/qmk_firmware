@@ -11,6 +11,7 @@ enum {
 
 enum layer_id {
   ENGRAM,
+  ENGRAM_T,
   QWERTY,
   RPE,      // russian phonetic engram
 //  RPE_EXT,  // russian phonetic engram extra characters
