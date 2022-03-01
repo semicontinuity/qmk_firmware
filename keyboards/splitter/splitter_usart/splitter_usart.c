@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <config.h>
 #include "print.h"
+#include "wpm_mod.h"
 
 
 inline void board_led_1_init(void) {
@@ -144,6 +145,7 @@ void matrix_init_user(void) {
 void matrix_scan_user(void) {
     process_remote_kbd_events(&SD_LEFT, false);
     process_remote_kbd_events(&SD_RIGHT, true);
+    decay_wpm();
 }
 
 void send_led_state(uint8_t state) {

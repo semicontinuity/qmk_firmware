@@ -1,4 +1,5 @@
 #include "keymap.h"
+#include "wpm_mod.h"
 
 bool raise_active = false;
 uint16_t raise_activation_time16 = 0;
@@ -441,6 +442,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(ENGRAM_T);
     }
 */
+
+    if (record->event.pressed) {
+        update_wpm(keycode);
+    }
 
     return true;
 }

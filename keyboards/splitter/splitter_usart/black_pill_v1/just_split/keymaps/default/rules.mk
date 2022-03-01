@@ -6,4 +6,4 @@ TAP_DANCE_ENABLE = yes
 RAW_ENABLE = yes
 SRC += raw_hid_receive_impl.c
 
-WPM_ENABLE = yes
+#WPM_ENABLE = yes
