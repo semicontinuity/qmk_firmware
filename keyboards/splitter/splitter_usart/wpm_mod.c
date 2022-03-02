@@ -27,7 +27,7 @@ static uint16_t wpm_timer01   = 0;
 // This smoothing is 40 keystrokes
 //static const float wpm_smoothing = WPM_SMOOTHING;
 static const float wpm_smoothing = WPM_SMOOTHING;
-static const float wpm_smoothing01 = WPM_SMOOTHING_01;
+static const float wpm_smoothing_decay = WPM_SMOOTHING_DECAY;
 
 void set_current_wpm(uint8_t new_wpm) { current_wpm = new_wpm; }
 
@@ -99,8 +99,8 @@ void decay_wpm(void) {
     if (timer_elapsed(wpm_timer) > 1000) {
         wpm_timer = timer_read();
     }
-    if (timer_elapsed(wpm_timer01) > 100) {
-        current_wpm += (-current_wpm) * wpm_smoothing01;
+    if (timer_elapsed(wpm_timer01) > 50) {
+        current_wpm += (-current_wpm) * wpm_smoothing_decay;
         wpm_timer01 = timer_read();
     }
 }
