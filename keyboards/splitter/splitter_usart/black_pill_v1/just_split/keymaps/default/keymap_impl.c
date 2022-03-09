@@ -301,7 +301,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     // Measure duration of tap dance
-    if (keycode == QK_TAP_DANCE) {
+    else if (keycode == QK_TAP_DANCE) {
         // In current layout, there is only one tap dance key: TD_RAISE
         if (record->event.pressed) {
             ql_tap_state.press_timestamp = record->event.time;
@@ -310,6 +310,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             ql_tap_state.release_timestamp = record->event.time;
 //            uprintf("process_record_user RELEASED keycode=%04x t=%d\n", keycode, record->event.time);
         }
+    }
+
+    else if (keycode == KC_PEDAL1) {
+        register_code(KC_LGUI);
+        register_code(KC_SPACE);
+        unregister_code(KC_SPACE);
+        unregister_code(KC_LGUI);
     }
 
     //    uprintf("process_record_user\n");
