@@ -54,3 +54,5 @@ enum custom_keycodes {
     KC_TURBO,
     KC_PEDAL1,
 };
+
+void backlight(void);

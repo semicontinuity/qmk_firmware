@@ -474,9 +474,6 @@ uint8_t caps_byte(void) {
     return caps_byte_for((host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK)));
 }
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    return new_layer_state = state;
-}
 
 void backlight(void) {
     uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
@@ -503,6 +500,13 @@ void backlight(void) {
         cur_leds        = leds;
         cur_layer_state = new_layer_state;
     }
+}
+
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    new_layer_state = state;
+    backlight();
+    return state;
 }
 
 

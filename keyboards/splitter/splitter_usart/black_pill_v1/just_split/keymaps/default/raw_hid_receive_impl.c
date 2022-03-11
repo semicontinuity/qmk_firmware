@@ -9,11 +9,9 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
     if (data[0]) layer_on(RPE); else layer_off(RPE);
 }
 
-/*
 
 bool led_update_user(led_t led_state) {
-    set_lock(LOCK_SHIFT, led_state.caps_lock);
-    indicate();
+//    set_lock(LOCK_SHIFT, led_state.caps_lock);
+    backlight();
     return true;
 }
-*/
