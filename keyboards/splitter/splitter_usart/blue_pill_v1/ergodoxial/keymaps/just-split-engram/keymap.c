@@ -1,12 +1,9 @@
 #include "keymap.h"
 
-#define C_S(kc) (QK_LCTL | QK_LSFT| (kc))
-#define A_S(kc) (QK_LALT | QK_LSFT| (kc))
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  // Mostly compatible with ENGRAM; `Q`, `Z` are in the middle columns, middle colums are different
+  // Mostly compatible with ENGRAM; `Q`, `Z` are in the middle columns, middle columns are different
   [ENGRAM] = LAYOUT_ergodox_pretty(
     KC_ESC,         KC_LBRC,        KC_2,           KC_3,           KC_4,             KC_5,           KC_LPRN,                                                KC_RPRN,        KC_6,           KC_7,             KC_8,           KC_9,           KC_RBRC,        KC_PSCR,        //
     KC_TAB,         KC_1,           KC_Y,           KC_O,           KC_U,             KC_Q,           KC_PGUP,                                                KC_UP,          KC_Z,           KC_L,             LT(F_C,KC_D),   LT(F_A,KC_W),   KC_0,           KC_INSERT,      //
@@ -89,7 +86,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       _______,        _______,              _______,          _______,                                                                                                          //
                                                                                                                       _______,              _______,                                                                                                                            //
-                                                                                      C_S(KC_C),      C_S(KC_V),      TG(QWERTY),           KC_NEW,           KC_INT,         KC_STR                                                                                            //
+                                                                                      RCS(KC_C),      RCS(KC_V),      TG(QWERTY),           KC_NEW,           KC_INT,         KC_STR                                                                                            //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -104,7 +101,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       _______,        _______,              _______,          _______,                                                                                                          //
                                                                                                                       _______,              _______,                                                                                                                            //
-                                                                                      C_S(KC_C),      C_S(KC_V),      TG(QWERTY),           KC_NEW,           KC_INT,         KC_STR                                                                                            //
+                                                                                      RCS(KC_C),      RCS(KC_V),      TG(QWERTY),           KC_NEW,           KC_INT,         KC_STR                                                                                            //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -132,7 +129,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      KC_INSERT,      KC_APPLICATION, LALT(KC_ESC),         XXXXXXX,          XXXXXXX,        XXXXXXX                                                                                            //
+                                                                                      KC_INSERT,      KC_APPLICATION, LALT(KC_ESC),         XXXXXXX,          XXXXXXX,        XXXXXXX                                                                                           //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
@@ -167,14 +164,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // Basic navigation layer, momentarily activated by RAISE hold; locked after RAISE long tap
   [S_NAV2] = LAYOUT_ergodox_pretty(
     XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX,          XXXXXXX,        XXXXXXX,                                                XXXXXXX,        XXXXXXX,        XXXXXXX,          XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX,        //
-    XXXXXXX,        XXXXXXX,        A_S(KC_DOWN),   A_S(KC_UP),     A_S(KC_RIGHT),    C_S(KC_A),      XXXXXXX,                                                XXXXXXX,        C_S(KC_W),      A_S(KC_HOME),     A_S(KC_PGDOWN), A_S(KC_PGUP),   XXXXXXX,        XXXXXXX,        //
-    XXXXXXX,        A_S(KC_LEFT),   C_S(KC_DOWN),   C_S(KC_UP),     C_S(KC_RIGHT),    C_S(KC_C),                                                                              C_S(KC_V),      S(KC_LEFT),       S(KC_DOWN),     S(KC_UP),       A(KC_END),      XXXXXXX,        //
-    XXXXXXX,        C_S(KC_LEFT),   C_S(KC_PGDOWN), C_S(KC_PGUP),   C_S(KC_END),      C_S(KC_Z),      XXXXXXX,                                                XXXXXXX,        C_S(KC_X),      S(KC_HOME),       S(KC_PGDOWN),   S(KC_PGUP),     S(KC_RIGHT),    XXXXXXX,        //
-    XXXXXXX,        C_S(KC_HOME),   XXXXXXX,        XXXXXXX ,       KC_TAB,                                                                                                                   C_S(KC_BSPC),     XXXXXXX,        XXXXXXX,        S(KC_END),      XXXXXXX,        //
+    XXXXXXX,        XXXXXXX,        LSA(KC_DOWN),   LSA(KC_UP),     LSA(KC_RIGHT),    RCS(KC_A),      XXXXXXX,                                                XXXXXXX,        RCS(KC_W),      LSA(KC_HOME),     LSA(KC_PGDOWN), LSA(KC_PGUP),   XXXXXXX,        XXXXXXX,        //
+    XXXXXXX,        LSA(KC_LEFT),   RCS(KC_DOWN),   RCS(KC_UP),     RCS(KC_RIGHT),    RCS(KC_C),                                                                              RCS(KC_V),      S(KC_LEFT),       S(KC_DOWN),     S(KC_UP),       A(KC_END),      XXXXXXX,        //
+    XXXXXXX,        RCS(KC_LEFT),   RCS(KC_PGDOWN), RCS(KC_PGUP),   RCS(KC_END),      RCS(KC_Z),      XXXXXXX,                                                XXXXXXX,        RCS(KC_X),      S(KC_HOME),       S(KC_PGDOWN),   S(KC_PGUP),     S(KC_RIGHT),    XXXXXXX,        //
+    XXXXXXX,        RCS(KC_HOME),   XXXXXXX,        XXXXXXX ,       KC_TAB,                                                                                                                   RCS(KC_BSPC),     XXXXXXX,        XXXXXXX,        S(KC_END),      XXXXXXX,        //
  // ---------------------------------------------------------------|-----------------|-------------------------------------------------|   |-------------------------------------------------|-----------------|----------------------------------------------------------------//
                                                                                                       XXXXXXX,        XXXXXXX,              XXXXXXX,          XXXXXXX,                                                                                                          //
                                                                                                                       XXXXXXX,              XXXXXXX,                                                                                                                            //
-                                                                                      C(KC_ENT),      KC_ALT_ERASE,   KC_ESC,               XXXXXXX,          KC_ENT,         XXXXXXX                                                                                        //
+                                                                                      C(KC_ENT),      KC_ALT_ERASE,   KC_ESC,               XXXXXXX,          KC_ENT,         XXXXXXX                                                                                           //
  //                                                                                  |-------------------------------------------------|   |---------------------------------------------|                                                                                      //
   ),
 
