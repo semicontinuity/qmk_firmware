@@ -12,9 +12,10 @@ enum {
 };
 
 enum layer_id {
+    QWERTY,
+
     ENGRAM,
     ENGRAM_TURBO,
-    QWERTY,
     RPE,      // russian phonetic engram; switched on left keyboard half: Win+Space
     LOWER,
     R_LOWER,  // lower layer (special chars), invoked from russian layout + extra russian characters
