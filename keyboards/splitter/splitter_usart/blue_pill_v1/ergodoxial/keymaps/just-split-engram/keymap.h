@@ -13,9 +13,9 @@ enum {
 
 enum layer_id {
     ENGRAM,
+    ENGRAM_TURBO,
     QWERTY,
     RPE,      // russian phonetic engram; switched on left keyboard half: Win+Space
-    RPE_EXT,  // russian phonetic engram extra characters (perhaps, delete)
     LOWER,
     R_LOWER,  // lower layer (special chars), invoked from russian layout + extra russian characters
     MULTI,
@@ -24,12 +24,8 @@ enum layer_id {
     FUNC,
     NUM,
     QNUM,     // Numbers (invoked from QWERTY)
-    //  NAV,
     NAV2,
-    //  C_NAV,
-    //  S_NAV,
     S_NAV2,
-    //  CS_NAV
     F_A,      // Alt+Function keys
     F_C,      // Ctrl+Function keys
 };
@@ -49,5 +45,12 @@ enum custom_keycodes {
     KC_TREE,
     KC_HASH_,
     KC_MAP,
-    KC_SET
+    KC_SET,
+
+    KC_SWATCH1,
+    KC_SWATCH2,
+    KC_SWATCH3,
+
+    KC_TURBO,
+    KC_PEDAL1,
 };

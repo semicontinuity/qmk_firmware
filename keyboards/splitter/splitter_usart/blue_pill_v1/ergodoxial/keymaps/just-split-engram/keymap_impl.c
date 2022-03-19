@@ -1,9 +1,28 @@
 #include "keymap.h"
+#include "wpm_mod.h"
 
 bool raise_active = false;
 uint16_t raise_activation_time16 = 0;
 uint32_t raise_activation_time = 0;
 uint32_t nav_layer_pressed_mask = 0;
+
+
+// Stopwatch
+uint32_t stopwatch_start_ts = 0;
+uint32_t unit_minutes = 0;
+int16_t cur_time_slot = -1;
+
+
+// Turbo
+#include "wpm.h"
+
+enum turbo_mode_t {
+    TURBO_OFF,
+    TURBO_AUTO,
+    TURBO_ON
+};
+
+uint32_t turbo_mode = TURBO_OFF;
 
 
 // Tap dance
@@ -85,7 +104,8 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 //            }
             break;
         case TD_SINGLE_LONG_TAP:
-            send_led_state(LED_STATE_NAV_LOCK);
+            set_lock(LOCK_NAV, true);
+//            indicate();
             layer_on(NAV2);
             break;
         case TD_SINGLE_HOLD:
@@ -98,6 +118,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
             toggle_caps_word();
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
+            layer_on(NAV2);
             layer_on(S_NAV2);
             break;
         case TD_NONE:
@@ -129,6 +150,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
 //            layer_off(C_NAV);
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
+            layer_off(NAV2);
             layer_off(S_NAV2);
 //            layer_off(CS_NAV);
             break;
@@ -149,13 +171,31 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 };
 
 
-uint16_t remap_nav_layer_key(uint16_t keycode) {
-    if (layer_state_is(NAV2)) {
-        switch (keycode) {
-            case KC_ENTER: return KC_DOT;
+void start_stop_stopwatch(uint16_t unit) {
+    if (unit_minutes == unit && stopwatch_start_ts) {
+        stopwatch_start_ts = 1L;
+        cur_time_slot = -1;
+    } else {
+        stopwatch_start_ts = timer_read32();
+        unit_minutes       = unit;
+    }
+}
+
+
+bool is_turbo_active(void) {
+    return (turbo_mode == TURBO_ON || (turbo_mode == TURBO_AUTO && get_current_wpm() > TURBO_AUTO_THRESHOLD_WPM));
+}
+
+bool is_turbo_affected_key(uint16_t keycode) {
+    if (keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) {
+        return true;
+    } else if (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) {
+        uint16_t layer = (keycode >> 8U) & 0xFU;
+        if (layer >= F_A) {
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 /**
@@ -163,7 +203,7 @@ uint16_t remap_nav_layer_key(uint16_t keycode) {
  * If returns false QMK will skip the normal key handling, and it will be up to you to send any key up or down events that are required.
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
+    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
 
     // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
     uint16_t nav_layer_remapped_key = 0;
@@ -193,18 +233,52 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
+    if (keycode == TT(S_NAV2)) {
+//        uprintf("keycode == TT(S_NAV2), layer_state_is(S_NAV2): %d, pressed: %d\n", layer_state_is(S_NAV2), record->event.pressed);
+        // Assume that NAV2 layer is locked.
+        if (!layer_state_is(S_NAV2) && !record->event.pressed) {
+//            uprintf("S_NAV2 off -> on\n");
+            set_lock(LOCK_SHIFT, true);
+//            indicate();
+        }
+
+        if (layer_state_is(S_NAV2) && record->event.pressed) {
+//            uprintf("S_NAV2 on -> off\n");
+            set_lock(LOCK_SHIFT, false);
+//            indicate();
+        }
+
+        return true;
+    }
+/*
+
+    if (keycode == KC_EXSEL && record->event.pressed) {
+        // KC_EXSEL is a dummy keycode, to implement Shift locking
+        // Assume that NAV2 layer is locked.
+        if (layer_state_is(S_NAV2)) {
+            layer_off(S_NAV2);
+            if (nav_loc_active) indicate(true, false);
+        } else {
+            layer_on(S_NAV2);
+            if (nav_loc_active) indicate(true, true);
+        }
+        return false;
+    }
+*/
 
     if (keycode == KC_ALT_ERASE) {
         // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
         // Assume that NAV2 layer is locked.
         layer_off(NAV2);
         layer_off(S_NAV2);
-        send_led_state(0);
+        set_lock(LOCK_NAV, false);
+        set_lock(LOCK_SHIFT, false);
+//        indicate();
         return false;
     }
 
     // Measure duration of tap dance
-    if (keycode == QK_TAP_DANCE) {
+    else if (keycode == QK_TAP_DANCE) {
         // In current layout, there is only one tap dance key: TD_RAISE
         if (record->event.pressed) {
             ql_tap_state.press_timestamp = record->event.time;
@@ -215,12 +289,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
+    else if (keycode == KC_PEDAL1) {
+        register_code(KC_LGUI);
+        register_code(KC_SPACE);
+        unregister_code(KC_SPACE);
+        unregister_code(KC_LGUI);
+    }
+
     //    uprintf("process_record_user\n");
-    uint8_t mod_state = get_mods();
+//    uint8_t mod_state = get_mods();
 //    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
     if (!process_case_modes(keycode, record)) {
         return false;
     }
+
 
     switch (keycode) {
 
@@ -230,7 +312,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed && is_oneshot_layer_active())
       clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
       return true;
-
+/*
     case KC_SPACE:    //
         uprintf("KC_SPACE\n");
         if (mod_state == 8 && record->event.pressed) {
@@ -242,7 +324,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             layer_on(RPE);
           }
         }
-        break;
+        break;*/
 /*
     case KC_SPACE:
         uprintf("space\n");
@@ -309,8 +391,105 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_SET:
                 SEND_STRING("Set");
                 break;
+
+            // stopwatch_start_ts == 1L will make it expired (to stop and re-display)
+            case KC_SWATCH1: // 15 min
+                start_stop_stopwatch(1);
+                break;
+            case KC_SWATCH2: // 30 min
+                start_stop_stopwatch(2);
+                break;
+            case KC_SWATCH3: // 60 min
+                start_stop_stopwatch(4);
+                break;
+
+            case KC_TURBO:
+                turbo_mode = (turbo_mode + 1) % 3;
+                break;
         }
     }
 
+/*
+    if (is_turbo_active()) {
+        board_led_1_on();
+        layer_on(ENGRAM_TURBO);
+        if (is_turbo_affected_key(keycode)) {
+            uint16_t simple_code = keycode & 0xFF;
+            if (record->event.pressed)
+                register_code(simple_code);
+            else
+                unregister_code(simple_code);
+            return false;
+        }
+    } else {
+        board_led_1_off();
+        layer_off(ENGRAM_TURBO);
+    }
+*/
+
+    if (record->event.pressed) {
+        update_wpm(keycode);
+    }
+
     return true;
+}
+
+// Status LEDs
+// =============================================================================================================
+
+layer_state_t cur_layer_state = 0;
+layer_state_t new_layer_state;
+
+uint8_t cur_leds = 0;
+
+
+uint8_t caps_byte_for(uint8_t leds) {
+    return leds ? 0x80 : 0x00;
+}
+
+uint8_t caps_byte(void) {
+    return caps_byte_for((host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK)));
+}
+
+
+void update_status_leds(void) {
+    uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
+
+    if (new_layer_state != cur_layer_state || leds != cur_leds) {
+        // TODO: LEDs
+        cur_leds        = leds;
+        cur_layer_state = new_layer_state;
+    }
+}
+
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    new_layer_state = state;
+    update_status_leds();
+    return state;
+}
+
+
+// Auto-turbo
+// =============================================================================================================
+
+void auto_turbo(void) {
+    if (is_turbo_active()) {
+        if (!layer_state_is(ENGRAM_TURBO)) {
+            board_led_1_on();
+            layer_on(ENGRAM_TURBO);
+        }
+    } else {
+        if (layer_state_is(ENGRAM_TURBO)) {
+            board_led_1_off();
+            layer_off(ENGRAM_TURBO);
+        }
+    }
+}
+
+// =============================================================================================================
+
+void housekeeping_task_user(void) {
+    update_status_leds();
+    auto_turbo();
 }
