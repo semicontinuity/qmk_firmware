@@ -452,11 +452,31 @@ uint8_t caps_byte(void) {
 }
 
 
+#define LED_STATE_CAPS_LOCK 0x01
+#define LED_STATE_ENGRAM_LOCK 0x02
+#define LED_STATE_NAV_LOCK 0x04
+
+
 void update_status_leds(void) {
     uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
 
     if (new_layer_state != cur_layer_state || leds != cur_leds) {
-        // TODO: LEDs
+        uint8_t led_bits = leds ? LED_STATE_CAPS_LOCK : 0;
+        switch (get_highest_layer(new_layer_state)) {
+            case ENGRAM:
+                send_led_state(led_bits | LED_STATE_ENGRAM_LOCK);
+                break;
+            case QWERTY:
+                send_led_state(led_bits);
+                break;
+            case NAV2:
+                send_led_state(LED_STATE_NAV_LOCK);
+                break;
+            case S_NAV2:
+                send_led_state(LED_STATE_NAV_LOCK | LED_STATE_CAPS_LOCK);
+                break;
+        }
+
         cur_leds        = leds;
         cur_layer_state = new_layer_state;
     }

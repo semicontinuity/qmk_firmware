@@ -55,3 +55,5 @@ enum custom_keycodes {
     KC_TURBO,
     KC_PEDAL1,
 };
+
+void update_status_leds(void);
