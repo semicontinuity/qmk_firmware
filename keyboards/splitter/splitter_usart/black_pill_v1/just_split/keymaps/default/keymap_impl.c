@@ -165,9 +165,98 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 
+// =============================================================================================================
+// Tap dance for LOWER key
+// The functionality is equivalent to one-shot layer: OSL(LOWER), i.e.
+// - tap LOWER, then key: enter character from LOWER layer
+// - hold LOWER, keys, release LOWER: enter multiple characters from LOWER layer, while LOWER key is held down.
+// The difference is, that "standard" OSL is a bit buggy:
+// if "press LOWER, key1, key2, release LOWER" is executed quickly, unexpected characters are registered.
+// E.g., instead of "+=", "++" is registered.
+// First character has implicit "Shift" modifier that is erroneously applied to the next character.
+typedef enum {
+    TD_LOWER_NONE,
+    TD_LOWER_UNKNOWN,
+    TD_LOWER_SINGLE_TAP,
+    TD_LOWER_SINGLE_HOLD,
+} td_lower_state_t;
+
+typedef struct {
+    td_lower_state_t state;
+} td_lower_tap_t;
+
+static td_lower_tap_t ql_lower_tap_state = {
+    .state = TD_LOWER_NONE
+};
+
+// Function associated with all LOWER key tap dances
+td_lower_state_t lower_cur_dance(qk_tap_dance_state_t *state);
+
+// Functions associated with individual tap dances
+void ql_finished(qk_tap_dance_state_t *state, void *user_data);
+void ql_reset(qk_tap_dance_state_t *state, void *user_data);
+
+
+// Determine the current tap dance state of LOWER key
+td_lower_state_t lower_cur_dance(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->pressed) {
+            return TD_LOWER_SINGLE_HOLD;
+        } else {
+            return TD_LOWER_SINGLE_TAP;
+        }
+    } else return TD_LOWER_UNKNOWN;
+}
+
+
+void ql_lower_finished(qk_tap_dance_state_t *state, void *user_data) {
+    ql_lower_tap_state.state = lower_cur_dance(state);
+    switch (ql_lower_tap_state.state) {
+        case TD_LOWER_SINGLE_TAP:
+            if (layer_state_is(RPE)) {
+                layer_on(R_LOWER);
+                set_oneshot_layer(R_LOWER, ONESHOT_START);
+                clear_oneshot_layer_state(ONESHOT_PRESSED);
+            } else {
+                layer_on(LOWER);
+                set_oneshot_layer(LOWER, ONESHOT_START);
+                clear_oneshot_layer_state(ONESHOT_PRESSED);
+            }
+            break;
+        case TD_LOWER_SINGLE_HOLD:
+            if (layer_state_is(RPE)) {
+                layer_on(R_LOWER);
+            } else {
+                layer_on(LOWER);
+            }
+            break;
+        case TD_NONE:
+        case TD_UNKNOWN:
+            break;
+    }
+}
+
+void ql_lower_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (ql_lower_tap_state.state) {
+        case TD_LOWER_SINGLE_TAP:
+            break;
+        case TD_LOWER_SINGLE_HOLD:
+            layer_off(LOWER);
+            layer_off(R_LOWER);
+            break;
+        case TD_NONE:
+        case TD_UNKNOWN:
+            break;
+    }
+    ql_lower_tap_state.state = TD_LOWER_NONE;
+}
+
+// =============================================================================================================
+
 // Associate our tap dance key with its functionality
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_RAISE] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, TAPPING_TERM)
+    [TD_RAISE] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, TAPPING_TERM),
+    [TD_LOWER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_lower_finished, ql_lower_reset, TAPPING_TERM),
 };
 
 

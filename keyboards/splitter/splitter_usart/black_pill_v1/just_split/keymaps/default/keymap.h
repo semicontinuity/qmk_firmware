@@ -6,7 +6,8 @@
 
 
 enum {
-  TD_RAISE
+  TD_RAISE,
+  TD_LOWER,
 };
 
 enum layer_id {
