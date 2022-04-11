@@ -36,3 +36,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
 { B1,     NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
 }
+
+#define WPM_MOD_ENABLE 1

@@ -145,7 +145,9 @@ void matrix_init_user(void) {
 void matrix_scan_user(void) {
     process_remote_kbd_events(&SD_LEFT, false);
     process_remote_kbd_events(&SD_RIGHT, true);
+#ifdef WPM_MOD_ENABLE
     decay_wpm();
+#endif
 }
 
 void send_led_state(uint8_t state) {
