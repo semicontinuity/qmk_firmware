@@ -20,7 +20,7 @@ uint32_t releasedChord	= 0;		// Keys released from current chord
 uint32_t tChord			= 0;		// Protects state of cChord
 
 #ifndef STENOLAYERS
-uint32_t stenoLayers[] = { PVR };
+uint32_t stenoLayers[] = { PWR };
 size_t 	 stenoLayerCount = sizeof(stenoLayers)/sizeof(stenoLayers[0]);
 #endif
 
@@ -54,95 +54,94 @@ int8_t	mousePress;
 bool send_steno_chord_user(steno_mode_t mode, uint8_t chord[6]) {
     // Check for mousekeys, this is release
 #ifdef MOUSEKEY_ENABLE
-if (inMouse) {
-    inMouse = false;
-    mousekey_off(mousePress);
-    mousekey_send();
-}
+    if (inMouse) {
+        inMouse = false;
+        mousekey_off(mousePress);
+        mousekey_send();
+    }
 #endif
 
-// Toggle Serial/QWERTY steno
-if (cChord == (PVR | FN | ST1 | ST2)) {
+    // Toggle Serial/QWERTY steno
+    if (cChord == (PWR | FN | ST1 | ST2)) {
 #ifndef NO_DEBUG
-    uprintf("Fallback Toggle\n");
+        uprintf("Fallback Toggle\n");
 #endif
-    QWERSTENO = !QWERSTENO;
+        QWERSTENO = !QWERSTENO;
 
-    goto out;
-}
-
-// handle command mode
-if (cChord == (PVR | FN | RD | RZ)) {
-#ifndef NO_DEBUG
-    uprintf("COMMAND Toggle\n");
-#endif
-    if (cMode != COMMAND) {   // Entering Command Mode
-        CMDLEN = 0;
-        pMode = cMode;
-        cMode = COMMAND;
-    } else {                  // Exiting Command Mode
-        cMode = pMode;
-
-        // Press all and release all
-        for (int i = 0; i < CMDLEN; i++) {
-            register_code(CMDBUF[i]);
-        }
-        clear_keyboard();
+        goto out;
     }
 
-    goto out;
-}
-
-// Handle Gaming Toggle,
-if (cChord == (PVR | FN | ST4 | ST3) && keymapsCount > 1) {
+    // handle command mode
+    if (cChord == (PWR | FN | RD | RZ)) {
 #ifndef NO_DEBUG
-    uprintf("Switching to QMK\n");
+        uprintf("COMMAND Toggle\n");
 #endif
-    layer_on(1);
-    goto out;
-}
+        if (cMode != COMMAND) {  // Entering Command Mode
+            CMDLEN = 0;
+            pMode  = cMode;
+            cMode  = COMMAND;
+        } else {  // Exiting Command Mode
+            cMode = pMode;
 
-// Lone FN press, toggle QWERTY
+            // Press all and release all
+            for (int i = 0; i < CMDLEN; i++) {
+                register_code(CMDBUF[i]);
+            }
+            clear_keyboard();
+        }
+
+        goto out;
+    }
+
+    // Handle Gaming Toggle,
+    if (cChord == (PWR | FN | ST4 | ST3) && keymapsCount > 1) {
+#ifndef NO_DEBUG
+        uprintf("Switching to QMK\n");
+#endif
+        layer_on(1);
+        goto out;
+    }
+
+    // Lone FN press, toggle QWERTY
 #ifndef ONLYQWERTY
-if (cChord == FN) {
-    (cMode == STENO) ? (cMode = QWERTY) : (cMode = STENO);
-    goto out;
-}
+    if (cChord == FN) {
+        (cMode == STENO) ? (cMode = QWERTY) : (cMode = STENO);
+        goto out;
+    }
 #endif
 
-// Check for Plover momentary
-if (cMode == QWERTY && (cChord & FN)) {
-    cChord ^= FN;
-    goto steno;
-}
+    // Check for Plover momentary
+    if (cMode == QWERTY && (cChord & FN)) {
+        cChord ^= FN;
+        goto steno;
+    }
 
-// Do QWERTY and Momentary QWERTY
-if (cMode == QWERTY || (cMode == COMMAND) || (cChord & (FN | PVR))) {
-    processChord(false);
-    goto out;
-}
+    // Do QWERTY and Momentary QWERTY
+    if (cMode == QWERTY || (cMode == COMMAND) || (cChord & (FN | PWR))) {
+        processChord(false);
+        goto out;
+    }
 
-// Fallback NKRO Steno
-if (cMode == STENO && QWERSTENO) {
-    processChord(true);
-    goto out;
-}
+    // Fallback NKRO Steno
+    if (cMode == STENO && QWERSTENO) {
+        processChord(true);
+        goto out;
+    }
 
 steno:
     // Hey that's a steno chord!
-    inChord = false;
-chordIndex = 0;
-cChord = 0;
-return true;
+    inChord    = false;
+    chordIndex = 0;
+    cChord     = 0;
+    return true;
 
 out:
-    cChord = 0;
-    inChord = false;
+    cChord     = 0;
+    inChord    = false;
     chordIndex = 0;
     clear_keyboard();
-    repEngaged  = false;
-    for (int i = 0; i < 32; i++)
-        chordState[i] = 0xFFFF;
+    repEngaged = false;
+    for (int i = 0; i < 32; i++) chordState[i] = 0xFFFF;
 
     return false;
 }
@@ -166,7 +165,7 @@ bool process_steno_user(uint16_t keycode, keyrecord_t *record) {
         case STN_ST3:			pr ? (cChord |= (ST3)): (cChord &= ~(ST3)); break;
         case STN_ST4:			pr ? (cChord |= (ST4)): (cChord &= ~(ST4)); break;
         case STN_FN:			pr ? (cChord |= (FN)) : (cChord &= ~(FN)); break;
-        case STN_PWR:			pr ? (cChord |= (PVR)): (cChord &= ~(PVR)); break;
+        case STN_PWR:			pr ? (cChord |= (PWR)): (cChord &= ~(PWR)); break;
         case STN_N1...STN_N6:	pr ? (cChord |= (LNO)): (cChord &= ~(LNO)); break;
         case STN_N7...STN_NC:	pr ? (cChord |= (RNO)): (cChord &= ~(RNO)); break;
 
@@ -204,8 +203,6 @@ bool process_steno_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-
-
 void send_keys_early(void) {
     // We abuse this for early sending of key
     // Key repeat only on QWER/SYMB layers
@@ -213,22 +210,21 @@ void send_keys_early(void) {
 
     // Check timers
 #ifndef NO_REPEAT
-if (repEngaged && timer_elapsed(repTimer) > REP_DELAY) {
-    // Process Key for report
-    processChord(false);
+    if (repEngaged && timer_elapsed(repTimer) > REP_DELAY) {
+        // Process Key for report
+        processChord(false);
 
-    // Send report to host
-    send_keyboard_report();
-    clear_keyboard();
-    repTimer = timer_read();
-}
+        // Send report to host
+        send_keyboard_report();
+        clear_keyboard();
+        repTimer = timer_read();
+    }
 
-if (!repEngaged && timer_elapsed(repTimer) > REP_INIT_DELAY) {
-    repEngaged = true;
-}
+    if (!repEngaged && timer_elapsed(repTimer) > REP_INIT_DELAY) {
+        repEngaged = true;
+    }
 #endif
 }
-
 
 void matrix_scan_kb(void) {
     matrix_scan_user();
@@ -322,14 +318,14 @@ void processChord(bool useFakeSteno) {
                 continue;
 
             // Assume mid parse Sym is new chord
-            if (i != 0 && test != 0 && (cChord ^ test) == PVR) {
+            if (i != 0 && test != 0 && (cChord ^ test) == PWR) {
                 longestChord = test;
                 break;
             }
 
             // Lock SYM layer in once detected
-            if (mask & PVR)
-                cChord |= PVR;
+            if (mask & PWR)
+                cChord |= PWR;
 
 
             // Testing for keycodes
