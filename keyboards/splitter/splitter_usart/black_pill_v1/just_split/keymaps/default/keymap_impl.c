@@ -294,6 +294,20 @@ bool is_turbo_affected_key(uint16_t keycode) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
 
+    /*
+        // ^C, ^V on long presses (add LT(0, KC_J), LT(0, KC_K) to keymap)
+        if (!record->tap.count && record->event.pressed) {
+            switch (keycode) {
+                case LT(0, KC_J):  // on QWERTY "C"
+                    tap_code16(C(KC_C));  // Intercept hold function to send Ctrl-C
+                    return false;
+                case LT(0, KC_K):  // on QWERTY "V"
+                    tap_code16(C(KC_V));  // Intercept hold function to send Ctrl-V
+                    return false;
+            }
+        }
+    */
+
     // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
     uint16_t nav_layer_remapped_key = 0;
     uint32_t nav_layer_mask = 0;
@@ -331,9 +345,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (nav_layer_remapped_key) {
         if (record->event.pressed) {
-            uint16_t delay = TIMER_DIFF_16(record->event.time, ql_tap_state.press_timestamp);
+//            uint16_t delay = TIMER_DIFF_16(record->event.time, ql_tap_state.press_timestamp);
 //            uprintf("delay=%d\n", delay);
-            if (raise_active && (delay < TAPPING_TERM)) {
+//            if (raise_active && (delay < TAPPING_TERM)) {
+            if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
+                del_oneshot_mods(MOD_MASK_SHIFT);
                 nav_layer_pressed_mask |= nav_layer_mask;
                 register_code16(nav_layer_remapped_key);
                 return false;
