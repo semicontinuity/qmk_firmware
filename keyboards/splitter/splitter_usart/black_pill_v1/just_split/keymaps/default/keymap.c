@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define C_S(kc) (QK_LCTL | QK_LSFT| (kc))
 #define A_S(kc) (QK_LALT | QK_LSFT| (kc))
 
+// Idea: Hold G + Right Home Row = Super+Arrows, to move windows
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [ENGRAM] = LAYOUT_split_3x5_3_p(
@@ -169,7 +170,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // // KC_EXSEL is a dummy keycode, to implement Shift locking
   [NAV2] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      A(KC_LEFT),   A(KC_DOWN),   A(KC_UP),     A(KC_RIGHT),        C(KC_A),                                                C(KC_W),            A(KC_HOME),       A(KC_PGDOWN),  A(KC_PGUP),    A(KC_END),
+      A(KC_LEFT),   A(KC_DOWN),   A(KC_UP),     A(KC_RIGHT),        C(KC_W),                                                C(KC_A),            A(KC_HOME),       A(KC_PGDOWN),  A(KC_PGUP),    A(KC_END),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
       C(KC_LEFT),   C(KC_DOWN),   C(KC_UP),     C(KC_RIGHT),        C(KC_C),                                                C(KC_V),            KC_LEFT,          KC_DOWN,       KC_UP,         KC_RIGHT,
   //|-------------+-------------+-------------+---------------+----------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
@@ -194,7 +195,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // // TD_SINGLE_TAP_THEN_HOLD
   [S_NAV2] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      A_S(KC_LEFT), A_S(KC_DOWN), A_S(KC_UP),   A_S(KC_RIGHT),      C_S(KC_A),                                              C_S(KC_W),          A_S(KC_HOME),     A_S(KC_PGDOWN),A_S(KC_PGUP),  A_S(KC_END),
+      A_S(KC_LEFT), A_S(KC_DOWN), A_S(KC_UP),   A_S(KC_RIGHT),      C_S(KC_W),                                              C_S(KC_A),          A_S(KC_HOME),     A_S(KC_PGDOWN),A_S(KC_PGUP),  A_S(KC_END),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
       C_S(KC_LEFT), C_S(KC_DOWN), C_S(KC_UP),   C_S(KC_RIGHT),      C_S(KC_C),                                              C_S(KC_V),          S(KC_LEFT),       S(KC_DOWN),    S(KC_UP),      S(KC_RIGHT),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
