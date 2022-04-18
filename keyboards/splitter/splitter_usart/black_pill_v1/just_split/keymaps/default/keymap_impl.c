@@ -292,7 +292,7 @@ bool is_turbo_affected_key(uint16_t keycode) {
  * If returns false QMK will skip the normal key handling, and it will be up to you to send any key up or down events that are required.
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    uprintf("process_record_user keycode=%04x %s\n", keycode, record->event.pressed ? "PRESSED" : "RELEASED");
+    uprintf("process_record_user keycode=%04x pressed=%d\n", keycode, record->event.pressed);
 
     /*
         // ^C, ^V on long presses (add LT(0, KC_J), LT(0, KC_K) to keymap)
@@ -565,10 +565,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // Backlight
 // =============================================================================================================
 
-layer_state_t cur_layer_state = 0;
-layer_state_t new_layer_state;
+volatile layer_state_t cur_layer_state = 0;
+volatile layer_state_t new_layer_state;
 
-uint8_t cur_leds = 0;
+volatile uint8_t cur_leds = 0;
 
 
 uint8_t caps_byte_for(uint8_t leds) {
@@ -584,20 +584,26 @@ void backlight(void) {
     uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
 
     if (new_layer_state != cur_layer_state || leds != cur_leds) {
+        uprintf("backlight$0 new_layer_state=%08x cur_layer_state=%08x leds=%02x cur_leds=%02x\n", (unsigned int)new_layer_state, (unsigned int)cur_layer_state, leds, cur_leds);
         switch (get_highest_layer(new_layer_state)) {
             case ENGRAM:
+                uprintf("backlight$100\n");
                 set_backlight_leds(0x00, 0x00, caps_byte_for(leds));
                 break;
             case QWERTY:
+                uprintf("backlight$200\n");
                 set_backlight_leds(0x80, 0x80, caps_byte_for(leds));
                 break;
             case RPE:
+                uprintf("backlight$300\n");
                 set_backlight_leds(0x80, 0x00, caps_byte_for(leds));
                 break;
             case NAV2:
+                uprintf("backlight$400\n");
                 set_backlight_leds(0x00, 0x80, 0x00);
                 break;
             case S_NAV2:
+                uprintf("backlight$500\n");
                 set_backlight_leds(0x00, 0x80, 0x80);
                 break;
         }
@@ -623,6 +629,7 @@ void stopwatch(void) {
 
         if (stopwatch_start_ts == 1) {
             stopwatch_start_ts = 0;
+            uprintf("stopwatch$0\n");
             set_led_bars(0, 0);
             return;
         }
@@ -651,6 +658,7 @@ void stopwatch(void) {
                 pattern_g = pattern;
             }
 
+            uprintf("stopwatch$1 r=%04x g=%04x\n", pattern_r, pattern_g);
             set_led_bars(pattern_r, pattern_g);
         }
     }

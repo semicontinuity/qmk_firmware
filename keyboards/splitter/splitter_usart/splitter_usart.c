@@ -180,6 +180,7 @@ void kb_half_set_backlight_leds(bool right_half, uint8_t r, uint8_t g, uint8_t b
 }
 
 void set_backlight_leds(uint8_t r, uint8_t g, uint8_t b) {
+    uprintf("set_backlight_leds r=%02x g=%02x b=%02x\n", r, g, b);
     kb_half_set_backlight_leds(false, r, g, b);
     kb_half_set_backlight_leds(true, r, g, b);
 }
@@ -194,6 +195,7 @@ void kb_half_set_led_bar(bool right_half, uint16_t r, uint16_t g) {
 }
 
 void set_led_bars(uint16_t r, uint16_t g) {
+    uprintf("set_led_bars r=%04x g=%04x\n", r, g);
     kb_half_set_led_bar(false, r, g);
     kb_half_set_led_bar(true, r, g);
 }

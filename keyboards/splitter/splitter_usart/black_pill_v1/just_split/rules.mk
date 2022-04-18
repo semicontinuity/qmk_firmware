@@ -1,14 +1,16 @@
 # Build Options
 #   change yes to no to disable
 #
+KEYBOARD_SHARED_EP  = yes
+
 BOOTMAGIC_ENABLE = no       # Virtual DIP switch configuration
 
 # "MOUSEKEY_ENABLE = yes and EXTRAKEY_ENABLE = yes must both be set to yes in order for console to be enabled."
 MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 
-#CONSOLE_ENABLE = yes        # Console for debug
-CONSOLE_ENABLE = no
+CONSOLE_ENABLE = yes        # Console for debug
+#CONSOLE_ENABLE = no
 
 COMMAND_ENABLE = yes         # Commands for debug and configuration
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
