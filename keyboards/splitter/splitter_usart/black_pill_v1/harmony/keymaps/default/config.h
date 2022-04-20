@@ -1,0 +1,7 @@
+#pragma once
+
+#define TAPPING_TOGGLE 1
+#define TURBO_AUTO_THRESHOLD_WPM 25
+
+#define WPM_SMOOTHING 0.7
+#define WPM_SMOOTHING_DECAY 0.25
