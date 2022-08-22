@@ -38,3 +38,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 #define WPM_MOD_ENABLE 1
+#define CAPSWORD_USE_SHIFT 1
