@@ -97,36 +97,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // with underscore (inaccessible from QWERTY)
   [LOWER] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_EXLM,      KC_LT,        KC_GT,        KC_AMPR,            KC_CIRC,                                                KC_TILDE,           KC_AT,            KC_LBRACKET,   KC_RBRACKET,   KC_GRAVE,
+      KC_EXLM,      KC_LT,        KC_GT,        KC_AMPR,            KC_CIRC,                                                KC_TILDE,           KC_AT,            KC_RBRACKET,   KC_LBRACKET,   KC_GRAVE,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_SCOLON,        KC_LCBR,       KC_RCBR,       KC_DQUO,
+      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_1,               KC_SCOLON,        KC_RCBR,       KC_LCBR,       KC_DQUO,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      KC_ASTERISK,  KC_SLASH,     KC_PIPE,            KC_1,                                                   KC_3,               KC_COLON,         KC_DOLLAR,     KC_PERC,       KC_QUOTE,
+      KC_PLUS,      KC_ASTERISK,  KC_SLASH,     KC_PIPE,            KC_UNDS,                                                KC_2,               KC_COLON,         KC_DOLLAR,     KC_PERC,       KC_QUOTE,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    KC_HASH,      KC_SPACE,           KC_UNDS,     C(KC_SLASH),           KC_CIRC,            KC_BSLASH,          KC_COMMA,         KC_TILDE,                     XXXXXXX
+      XXXXXXX,                    KC_HASH,      KC_SPACE,           KC_UNDS,     C(KC_SLASH),           KC_BSLASH,          C(KC_C),            XXXXXXX,          C(KC_V),                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
   // LOWER layer, when activated from RPE (russian layout): same as LOWER, except characters that cannot be typed + extra russian characters (э ё ю я ь ъ щ)
   [R_LOWER] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-      KC_EXLM,      KC_QUOT,/*э*/ KC_GRV,/*ё*/  KC_DOT,  /*ю*/      KC_CIRC,                                                _______,            XXXXXXX,          XXXXXXX,       KC_O,   /*щ*/  XXXXXXX,
+      KC_EXLM,      KC_QUOT,/*э*/ KC_GRV,/*ё*/  KC_DOT,  /*ю*/      KC_CIRC,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       KC_O,   /*щ*/  XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_2,               KC_DOLLAR,/*;*/   KC_M,   /*ь*/  KC_RBRC,/*ъ*/  KC_AT,   // "
+      KC_MINUS,     KC_LPRN,      KC_RPRN,      KC_EQUAL,           KC_0,                                                   KC_1,               KC_DOLLAR,/*;*/   KC_M,   /*ь*/  KC_RBRC,/*ъ*/  KC_AT,   // "
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-      KC_PLUS,      KC_ASTERISK,  KC_PIPE,/*/*/ KC_Z,    /*я*/      KC_1,                                                   KC_3,               KC_CIRC,  /*:*/   XXXXXXX,       KC_PERC,       XXXXXXX,
+      KC_PLUS,      KC_ASTERISK,  KC_PIPE,/*/*/ KC_Z,    /*я*/      KC_UNDS,                                                KC_2,               KC_CIRC,  /*:*/   XXXXXXX,       KC_PERC,       XXXXXXX,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    KC_HASH,/*№*/ KC_SPACE,           KC_UNDS,     XXXXXXX,               XXXXXXX,            KC_BSLASH,          KC_QUES,  /*,*/   XXXXXXX,                      XXXXXXX
+      XXXXXXX,                    KC_HASH,/*№*/ KC_SPACE,           KC_UNDS,     C(KC_SLASH),           KC_BSLASH,          C(KC_C),            XXXXXXX,          C(KC_V),                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
   [MULTI] = LAYOUT_split_3x5_3_p(
   //--------------------------------------------------------------------------.                                          ,-----------------------------------------------------------------------------------.
-     LCTL(KC_B),   LCTL(KC_Y),   LCTL(KC_O),   LCTL(KC_U),         LCTL(KC_Q),                                             KC_PQUEUE,          KC_LINKED,        KC_ARRAY,      KC_LIST,       KC_DEQUEUE,
+     LCTL(KC_B),   LCTL(KC_Y),   LCTL(KC_O),   LCTL(KC_U),         LCTL(KC_Q),                                             KC_PQUEUE,          KC_DEQUEUE,       KC_LIST,       KC_ARRAY,      KC_LINKED,
   //-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-     LCTL(KC_C),   LCTL(KC_I),   LCTL(KC_E),   LCTL(KC_A),         C(KC_COMM),                                             KC_COMP,            KC_LT,            KC_COMMA,      KC_SPACE,      KC_GT,
+     LCTL(KC_C),   LCTL(KC_I),   LCTL(KC_E),   LCTL(KC_A),         C(KC_COMM),                                             KC_COMP,            KC_GT,            KC_SPACE,      KC_COMMA,      KC_LT,
   //-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
-     LCTL(KC_G),   LCTL(KC_X),   LCTL(KC_J),   LCTL(KC_K),         C(KC_SCLN),                                             KC_ENTRY,           KC_TREE,          KC_HASH_,      KC_MAP,        KC_SET,
+     LCTL(KC_G),   LCTL(KC_X),   LCTL(KC_J),   LCTL(KC_K),         C(KC_SCLN),                                             KC_ENTRY,           KC_SET,           KC_MAP,        KC_HASH_,      KC_TREE,
   //-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
      XXXXXXX,                    XXXXXXX,      C_S(KC_C),          C_S(KC_V),   TG(QWERTY),            KC_NEW,             KC_INT,             KC_STR,           KC_CHAR,                      XXXXXXX
   // =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
@@ -140,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+---------------|
       LALT(KC_G),   LALT(KC_X),   LALT(KC_J),   LALT(KC_K),         A(KC_SCLN),                                             XXXXXXX,            KC_WH_L,          KC_WH_D,       KC_WH_U,       KC_WH_R,
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+---------------|
-      XXXXXXX,                    KC_SWATCH1,   KC_SWATCH2,         KC_SWATCH3,  XXXXXXX,               C(KC_SLASH),        KC_BTN1,            KC_BTN3,          KC_BTN2,                      XXXXXXX
+      XXXXXXX,                    KC_SWATCH1,   KC_SWATCH2,         KC_SWATCH3,  XXXXXXX,               C(KC_BSLASH),       KC_BTN1,            KC_BTN3,          KC_BTN2,                      XXXXXXX
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
