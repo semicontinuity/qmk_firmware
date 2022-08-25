@@ -520,6 +520,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("Set");
                 break;
 
+            case KC_RETURN_:
+                SEND_STRING("return ");
+                break;
+
             // stopwatch_start_ts == 1L will make it expired (to stop and re-display)
             case KC_SWATCH1: // 15 min
                 start_stop_stopwatch(1);

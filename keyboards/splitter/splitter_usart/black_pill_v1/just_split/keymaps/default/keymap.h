@@ -49,6 +49,8 @@ enum custom_keycodes {
     KC_MAP,
     KC_SET,
 
+    KC_RETURN_,
+
     KC_SWATCH1,
     KC_SWATCH2,
     KC_SWATCH3,
