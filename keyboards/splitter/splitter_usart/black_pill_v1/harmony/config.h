@@ -17,24 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define PRODUCT USART Splitter/BlackPill for JustSplit
+#define PRODUCT USART Splitter/BlackPill for Harmony
 
-#define MATRIX_ROWS 8
+#define MATRIX_ROWS 6
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
-#define MATRIX_COLS 5
-#define FLIP_COLS
+#define MATRIX_COLS 7
 
-// PB3 is SDA2
-// PB1: seems to be wrongly connected on the board; should have been PB10=SCL2
 #define DIRECT_PINS {\
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ B3,     NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
-{ B1,     NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
+{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN },   \
+{ NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
 }
 
 #define WPM_MOD_ENABLE 1
