@@ -32,4 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN }    \
 }
 
+#define REMAP_KEY_EVENT_0_FROM 0x00
+#define REMAP_KEY_EVENT_0_TO 0x06
+#define REMAP_KEY_EVENT_1_FROM 0x40
+#define REMAP_KEY_EVENT_1_TO 0x46
+
 #define WPM_MOD_ENABLE 1

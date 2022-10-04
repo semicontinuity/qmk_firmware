@@ -87,9 +87,17 @@ bool uart_available(SerialDriver *sdp) { return !sdGetWouldBlock(sdp); }
 
 
 static void process_remote_kbd_events(SerialDriver *sdp, bool is_right) {
-    while (uart_available( sdp)) {
+    while (uart_available(sdp)) {
         uint8_t event = uart_getchar(sdp);
 //        uprintf("\n[is_right=%d] event: %02x\n", is_right, event);
+
+#if defined(REMAP_KEY_EVENT_0_FROM) && defined(REMAP_KEY_EVENT_0_TO)
+        if (event == REMAP_KEY_EVENT_0_FROM) event = REMAP_KEY_EVENT_0_TO;
+#endif
+
+#if defined(REMAP_KEY_EVENT_1_FROM) && defined(REMAP_KEY_EVENT_1_TO)
+        if (event == REMAP_KEY_EVENT_1_FROM) event = REMAP_KEY_EVENT_1_TO;
+#endif
 
         // Can modify the protocol to always set bit 7 (and check it here), so have more protection against received 'glitch' events
         key_event.time = (timer_read() | 1);
