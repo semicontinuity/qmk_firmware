@@ -23,6 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 
 
+#define C_S(kc) (QK_LCTL | QK_LSFT| (kc))
+#define A_S(kc) (QK_LALT | QK_LSFT| (kc))
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [ENGRAM] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
@@ -35,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
                                                 LT(MOUSE, KC_ESC),                                                                              LT(FUNC, KC_DEL),
-                                  KC_SPACE,     TD(TD_RAISE),       KC_DOT,                                                 KC_LSFT,            TD(TD_LOWER),     KC_ENT,
+                                  KC_SPACE,     TD(TD_RAISE),       KC_DOT,                                                 OSM(MOD_LSFT),      TD(TD_LOWER),     KC_ENT,
                                                 LT(MULTI, KC_TAB),                                                                              LT(NUM, KC_BSPC)
                               //`----------------------------------------------'                                          `----------------------------------------------------'
   ),
@@ -186,20 +190,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
 
-  // TODO
     [NUM] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
-      KC_B,         KC_Y,         KC_O,         KC_U,               XXXXXXX,                                                XXXXXXX,            LT(F_S,KC_L),     LT(F_C,KC_D),  LT(F_A,KC_W),  KC_V,
+      KC_DOT,       KC_7,         KC_8,         KC_9,               XXXXXXX,                                                XXXXXXX,            C(KC_L),          C(KC_D),       C(KC_W),       C(KC_V),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
-      LGUI_T(KC_C), LALT_T(KC_I), LCTL_T(KC_E), LSFT_T(KC_A),       XXXXXXX,          KC_Z,                 KC_Q,           XXXXXXX,            LSFT_T(KC_H),     RCTL_T(KC_T),  LALT_T(KC_S),  RGUI_T(KC_N),
+      KC_MINUS,     KC_4,         KC_5,         KC_6,               XXXXXXX,          KC_0,                 C(KC_Q),        XXXXXXX,            C(KC_H),          C(KC_T),       C(KC_S),       C(KC_N),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
-      KC_G,         RALT_T(KC_X), KC_J,         KC_K,               XXXXXXX,                                                XXXXXXX,            KC_R,             KC_M,          RALT_T(KC_F),  KC_P,
+      KC_PLUS,      KC_1,         KC_2,         KC_3,               XXXXXXX,                                                XXXXXXX,            C(KC_R),          C(KC_M),       C(KC_F),       C(KC_P),
   //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+--------------|
 
 
-                                                LT(MULTI, KC_TAB),                                                                              LT(FUNC, KC_DEL),
-                                  KC_SPACE,     TD(TD_RAISE),       KC_COMMA,                                               KC_DOT,             TD(TD_LOWER),     KC_ENT,
-                                                LT(MOUSE, KC_ESC),                                                                              LT(NUM, KC_BSPC)
+                                                KC_TAB,                                                                                         XXXXXXX,
+                                  KC_SPACE,     KC_EQUAL,       KC_COMMA,                                                   XXXXXXX,            XXXXXXX,          XXXXXXX,
+                                                KC_ESC,                                                                                         XXXXXXX
                               //`----------------------------------------------'                                          `----------------------------------------------------'
   ),
 
