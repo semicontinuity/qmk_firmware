@@ -11,24 +11,25 @@ enum {
 };
 
 enum layer_id {
-  ENGRAM,
-  ENGRAM_T,
-  QWERTY,
-  RPE,      // russian phonetic engram
+  ENGRAM        = 0,
+  ENGRAM_T      = 1,
+  QWERTY        = 2,
+  RPE           = 3,    // russian phonetic engram
 //  RPE_EXT,  // russian phonetic engram extra characters
-  LOWER,
-  R_LOWER,  // lower layer (special chars), invoked from russian layout
-  MULTI,
-  MOUSE,
-  FUNC,
-  NUM,
-  NAV2,
+  LOWER         = 4,
+  R_LOWER       = 5,    // lower layer (special chars), invoked from russian layout
+  MULTI         = 6,
+  MOUSE         = 7,
+  FUNC          = 8,
+  NUM           = 9,
+  NAV2          = 10,
 //  C_NAV,
-  S_NAV2,
+  S_NAV2        = 11,
 //  CS_NAV
-  F_A,      // Alt+Function keys
-  F_C,      // Ctrl+Function keys
-  F_S,      // Shift+Function keys
+  F_A           = 12,   // Alt+Function keys
+  F_C           = 13,   // Ctrl+Function keys
+  F_S           = 14,   // Shift+Function keys
+  ENGRAM_WIN    = 15,   // Engram keys with Win modifier
 };
 
 enum custom_keycodes {
