@@ -34,6 +34,7 @@ enum layer_id {
 
 enum custom_keycodes {
     KC_NEW = SAFE_RANGE,
+    KC_BOOL,
     KC_INT,
     KC_STR,
     KC_CHAR,
@@ -48,6 +49,8 @@ enum custom_keycodes {
     KC_HASH_,
     KC_MAP,
     KC_SET,
+
+    KC_RETURN_,
 
     KC_SWATCH1,
     KC_SWATCH2,

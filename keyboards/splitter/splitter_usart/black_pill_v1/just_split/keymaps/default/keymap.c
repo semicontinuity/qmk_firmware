@@ -257,6 +257,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //  =======                 //`------------------------------------------------------------------'  `------------------------------------------------------------------------'                =======
   ),
 
+  // Special layer, to be able to use Win+Letter combinations, without leaving Navigation layer
   [ENGRAM_WIN] = LAYOUT_split_3x5_3_p(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
       G(KC_B),      G(KC_Y),      G(KC_O),      G(KC_U),            G(KC_Q),                                                G(KC_Z),            G(KC_L),          G(KC_D),       G(KC_W),       G(KC_V),
