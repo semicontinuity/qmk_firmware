@@ -477,6 +477,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_NEW:
                 SEND_STRING("new ");
                 break;
+            case KC_BOOL:
+                SEND_STRING("Boolean");
+                break;
             case KC_INT:
                 SEND_STRING("Integer");
                 break;
