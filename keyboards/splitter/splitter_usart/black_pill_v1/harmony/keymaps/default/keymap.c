@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [ENGRAM] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
-      KC_B,         KC_Y,         KC_O,         KC_U,               XXXXXXX,                                                XXXXXXX,            KC_L,             LT(F_C,KC_D),  LT(F_A,KC_W),  KC_V,
+      KC_B,         KC_Y,         KC_O,         KC_U,               XXXXXXX,                                                XXXXXXX,            LT(F_S,KC_L),     LT(F_C,KC_D),  LT(F_A,KC_W),  KC_V,
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
       LGUI_T(KC_C), LALT_T(KC_I), LCTL_T(KC_E), LSFT_T(KC_A),       XXXXXXX,          KC_Z,                 KC_Q,           XXXXXXX,            LSFT_T(KC_H),     RCTL_T(KC_T),  LALT_T(KC_S),  RGUI_T(KC_N),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
@@ -157,8 +157,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
 
-
-  // TODO
     [MOUSE] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
       A(KC_B),      A(KC_Y),      A(KC_O),      A(KC_U),            XXXXXXX,                                                XXXXXXX,            KC_CUT,           KC_COPY,       KC_PASTE,      KC_UNDO,

@@ -477,11 +477,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_NEW:
                 SEND_STRING("new ");
                 break;
-            case KC_INT:
-                SEND_STRING("Integer");
-                break;
-            case KC_STR:
-                SEND_STRING("String");
+            case KC_BOOL:
+                SEND_STRING("Boolean");
                 break;
             case KC_CHAR:
                 SEND_STRING("Character");
@@ -518,6 +515,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
             case KC_SET:
                 SEND_STRING("Set");
+                break;
+
+            case KC_RETURN_:
+                SEND_STRING("return ");
                 break;
 
             // stopwatch_start_ts == 1L will make it expired (to stop and re-display)
