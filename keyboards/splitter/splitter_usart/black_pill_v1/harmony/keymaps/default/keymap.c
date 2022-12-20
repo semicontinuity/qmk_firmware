@@ -201,7 +201,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
                                                 KC_TAB,                                                                                         XXXXXXX,
-                                  KC_SPACE,     KC_EQUAL,       KC_COMMA,                                                   XXXXXXX,            XXXXXXX,          XXXXXXX,
+                                  KC_SPACE,     KC_EQUAL,           KC_COMMA,                                               XXXXXXX,            XXXXXXX,          XXXXXXX,
                                                 KC_ESC,                                                                                         XXXXXXX
                               //`----------------------------------------------'                                          `----------------------------------------------------'
   ),
