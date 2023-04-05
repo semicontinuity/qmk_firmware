@@ -25,6 +25,10 @@ enum turbo_mode_t {
 uint32_t turbo_mode = TURBO_OFF;
 
 
+// Backlight
+volatile uint8_t bl_brightness = 0x20;
+
+
 // Tap dance
 
 typedef enum {
@@ -541,6 +545,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case KC_TURBO:
                 turbo_mode = (turbo_mode + 1) % 3;
                 break;
+            case KC_BL_LESS:
+                if (bl_brightness > 0x00) {
+                    bl_brightness -= 0x04;
+                }
+                break;
+            case KC_BL_MORE:
+                if (bl_brightness < 0xf8) {
+                    bl_brightness += 0x04;
+                }
+                break;
         }
     }
 
@@ -579,7 +593,7 @@ volatile uint8_t cur_leds = 0;
 
 
 uint8_t caps_byte_for(uint8_t leds) {
-    return leds ? 0x80 : 0x00;
+    return leds ? bl_brightness : 0x00;
 }
 
 uint8_t caps_byte(void) {
@@ -599,19 +613,19 @@ void backlight(void) {
                 break;
             case QWERTY:
                 uprintf("backlight$200\n");
-                set_backlight_leds(0x80, 0x80, caps_byte_for(leds));
+                set_backlight_leds(0x80, bl_brightness, caps_byte_for(leds));
                 break;
             case RPE:
                 uprintf("backlight$300\n");
-                set_backlight_leds(0x80, 0x00, caps_byte_for(leds));
+                set_backlight_leds(bl_brightness, 0x00, caps_byte_for(leds));
                 break;
             case NAV2:
                 uprintf("backlight$400\n");
-                set_backlight_leds(0x00, 0x80, 0x00);
+                set_backlight_leds(0x00, bl_brightness, 0x00);
                 break;
             case S_NAV2:
                 uprintf("backlight$500\n");
-                set_backlight_leds(0x00, 0x80, 0x80);
+                set_backlight_leds(0x00, bl_brightness, bl_brightness);
                 break;
         }
 
