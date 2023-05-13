@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define C_S(kc) (QK_LCTL | QK_LSFT| (kc))
 #define A_S(kc) (QK_LALT | QK_LSFT| (kc))
 
+/*
+ * QWERTY layer is not available, not enough keys
+ */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [ENGRAM] = LAYOUT_split_3x5_plus_5x(
@@ -39,13 +42,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
                                                 LT(MULTI, KC_ESC),                                                                              LT(NUM, KC_DEL),
-                                  KC_SPACE,     TD(TD_RAISE),       KC_DOT,                                                 OSM(MOD_LSFT),      TD(TD_LOWER),     KC_ENT,
+                                  KC_SPACE,     TD(TD_RAISE),       KC_COMMA,                                               KC_DOT,             TD(TD_LOWER),     KC_ENT,
                                                 LT(MOUSE, KC_TAB),                                                                              LT(FUNC, KC_BSPC)
                               //`----------------------------------------------'                                          `----------------------------------------------------'
   ),
 
 
-  // Engram TURBO layer: these character keys lose their double-purpose and become ordinary keys
+  // Engram TURBO layer: these character keys lose their double purpose and become ordinary keys when typing very fast
     [ENGRAM_T] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
       _______,      _______,      _______,      _______,            _______,                                                _______,            KC_L,             KC_D,          KC_W,          _______,
@@ -63,25 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
 
-  // QWERTY is not available, not enough keys
-    [QWERTY] = LAYOUT_split_3x5_plus_5x(
-  //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,
-  //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,          XXXXXXX,           XXXXXXX,           XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,
-  //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
-      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,       XXXXXXX,       XXXXXXX,
-  //|-------------+-------------+-------------+-------------------+------------+-------------------|  |-------------------+-------------------+-----------------+--------------+--------------+--------------|
-
-
-                                                XXXXXXX,                                                                                        XXXXXXX,
-                                  KC_SPACE,     XXXXXXX,            XXXXXXX,                                                XXXXXXX,            XXXXXXX,          XXXXXXX,
-                                                XXXXXXX,                                                                                        XXXXXXX
-                              //`----------------------------------------------'                                          `----------------------------------------------------'
-  ),
-
-
-  // Russian layout
+  // Russian phonetic layout (phonetically close to ENGRAM)
   //  б             ы             о             у                   ч                                                       з                   л                 д              ш              в
   //  ц             и             е             а                                                                                               х                 т              с              н
   //  г             ж             й             к                                                                                               р                 м              ф              п
@@ -207,7 +192,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
 
-    [NAV2] = LAYOUT_split_3x5_plus_5x(
+    [NAV] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
       A(KC_LEFT),   A(KC_DOWN),   A(KC_UP),     A(KC_RIGHT),        XXXXXXX,                                                XXXXXXX,            A(KC_HOME),       A(KC_PGDOWN),  A(KC_PGUP),    A(KC_END),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
@@ -218,14 +203,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
                                                 KC_TAB,                                                                                         XXXXXXX,
-                                  C(KC_ENT),    KC_ALT_ERASE,       KC_COMMA,                                               XXXXXXX,            TT(S_NAV2),       KC_ENT,
+                                  C(KC_ENT),    KC_ALT_ERASE,       KC_COMMA,                                               XXXXXXX,            TT(S_NAV),        KC_ENT,
                                                 KC_ESC,                                                                                         XXXXXXX
                               //`----------------------------------------------'                                          `----------------------------------------------------'
   ),
 
 
 
-    [S_NAV2] = LAYOUT_split_3x5_plus_5x(
+    [S_NAV] = LAYOUT_split_3x5_plus_5x(
   //,--------------------------------------------------------------------------.                                          ,----------------------------------------------------------------------------------.
       A_S(KC_LEFT),A_S(KC_DOWN),  A_S(KC_UP),   A_S(KC_RIGHT),        XXXXXXX,                                                XXXXXXX,            A_S(KC_HOME),     A_S(KC_PGDOWN),A_S(KC_PGUP),  A_S(KC_END),
   //|-------------+-------------+-------------+-------------------+------------|                                          |-------------------+-----------------+--------------+--------------+--------------|
@@ -236,7 +221,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
                                                 A(KC_TAB),                                                                                      XXXXXXX,
-                                  XXXXXXX,      KC_ALT_ERASE,         XXXXXXX,                                                XXXXXXX,          TT(S_NAV2),       XXXXXXX,
+                                  XXXXXXX,      KC_ALT_ERASE,         XXXXXXX,                                                XXXXXXX,          TT(S_NAV),          XXXXXXX,
                                                 A(KC_ESC),                                                                                      LT(ENGRAM_WIN, KC_BSPC)
                               //`----------------------------------------------'                                          `----------------------------------------------------'
   ),
