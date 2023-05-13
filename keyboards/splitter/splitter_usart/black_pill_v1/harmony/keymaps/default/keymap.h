@@ -11,12 +11,12 @@ enum {
 };
 
 enum layer_id {
-  ENGRAM        = 0,
-  ENGRAM_T      = 1,
-
-  RPE           = 3,    // russian phonetic engram
+  ENGRAM        = 0,    // ENGRAM layout
+  ENGRAM_T      = 1,    // Engram TURBO layer; overlays ENGRAM when typing very fast
+  //                    // QWERTY layer is not available, not enough keys
+  RPE           = 3,    // Russian phonetic layout (phonetically close to ENGRAM)
   LOWER         = 4,
-  R_LOWER       = 5,    // lower layer (special chars), invoked from russian layout
+  R_LOWER       = 5,    // Modified LOWER layer (special chars), invoked from RPE layout
   MULTI         = 6,
   MOUSE         = 7,
   FUNC          = 8,

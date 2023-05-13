@@ -66,18 +66,14 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 
 // Determine the current tap dance state
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
-    uprintf("cur_dance: now %d, was %d\n", timer_read(), ql_tap_state.press_timestamp);
 
     if (state->count == 1) {
         if (state->pressed) {
             return TD_SINGLE_HOLD;
         } else {
-            //        uint16_t elapsed = timer_elapsed(ql_tap_state.press_timestamp);
             uint16_t elapsed = TIMER_DIFF_16(ql_tap_state.release_timestamp, ql_tap_state.press_timestamp);
-            uprintf("elapsed %d\n", elapsed);
 
             if (elapsed > 150) {
-                uprintf("TD_SINGLE_LONG_TAP\n");
                 return TD_SINGLE_LONG_TAP;
             } else {
                 return TD_SINGLE_TAP;
@@ -96,34 +92,22 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
         case TD_SINGLE_TAP:
             // Ideally, implement it so that when single tapped, caps lock lights up (how?)
             add_oneshot_mods(MOD_MASK_SHIFT);
-            uprintf("OS SHIFT\n");
             raise_active = true;
-//            raise_activation_time = timer_read32();
-//            raise_activation_time16 = timer_read();
-
-//            if (layer_state_is(QWERTY)) {
-//                add_oneshot_mods(MOD_MASK_SHIFT);
-//            } else {
-//                add_oneshot_mods(MOD_MASK_SHIFT);
-//            }
             break;
         case TD_SINGLE_LONG_TAP:
             set_lock(LOCK_NAV, true);
-//            indicate();
-            layer_on(NAV2);
+            layer_on(NAV);
             break;
         case TD_SINGLE_HOLD:
-            layer_on(NAV2);
+            layer_on(NAV);
             raise_active = true;
-//            raise_activation_time16 = timer_read();
-//            raise_activation_time = timer_read32();
             break;
         case TD_DOUBLE_TAP:
             toggle_caps_word();
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
-            layer_on(NAV2);
-            layer_on(S_NAV2);
+            layer_on(NAV);
+            layer_on(S_NAV);
             break;
         case TD_NONE:
         case TD_UNKNOWN:
@@ -136,27 +120,14 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
         case TD_SINGLE_TAP:
             raise_active = false;
             del_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
-//            del_oneshot_mods(MOD_MASK_SHIFT);   // del_oneshot_mods?
-//            if (layer_state_is(QWERTY)) {
-//                del_mods(MOD_MASK_SHIFT);
-//            } else {
-//                del_mods(MOD_MASK_SHIFT);
-//            }
             break;
         case TD_SINGLE_HOLD:
             raise_active = false;
-            layer_off(NAV2);
-
-            // When
-//            if (nav_layer_pressed_mask & 1) unregister_code(KC_QUES);
-//            if (nav_layer_pressed_mask & 2) unregister_code(KC_DOT);
-//            nav_layer_pressed_mask = 0;
-//            layer_off(C_NAV);
+            layer_off(NAV);
             break;
         case TD_SINGLE_TAP_THEN_HOLD:
-            layer_off(NAV2);
-            layer_off(S_NAV2);
-//            layer_off(CS_NAV);
+            layer_off(NAV);
+            layer_off(S_NAV);
             break;
         case TD_DOUBLE_TAP:
         case TD_SINGLE_LONG_TAP:
@@ -296,23 +267,8 @@ bool is_turbo_affected_key(uint16_t keycode) {
  * If returns false QMK will skip the normal key handling, and it will be up to you to send any key up or down events that are required.
  */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    uprintf("process_record_user keycode=%04x pressed=%d\n", keycode, record->event.pressed);
 
-    /*
-        // ^C, ^V on long presses (add LT(0, KC_J), LT(0, KC_K) to keymap)
-        if (!record->tap.count && record->event.pressed) {
-            switch (keycode) {
-                case LT(0, KC_J):  // on QWERTY "C"
-                    tap_code16(C(KC_C));  // Intercept hold function to send Ctrl-C
-                    return false;
-                case LT(0, KC_K):  // on QWERTY "V"
-                    tap_code16(C(KC_V));  // Intercept hold function to send Ctrl-V
-                    return false;
-            }
-        }
-    */
-
-    // Remap certain keys of NAV2 layer, if typed immediately after RAISE:
+    // Remap certain keys of NAV layer, if typed immediately after RAISE:
     uint16_t nav_layer_remapped_key = 0;
     uint32_t nav_layer_mask = 0;
 
@@ -349,9 +305,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (nav_layer_remapped_key) {
         if (record->event.pressed) {
-//            uint16_t delay = TIMER_DIFF_16(record->event.time, ql_tap_state.press_timestamp);
-//            uprintf("delay=%d\n", delay);
-//            if (raise_active && (delay < TAPPING_TERM)) {
             if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
                 del_oneshot_mods(MOD_MASK_SHIFT);
                 nav_layer_pressed_mask |= nav_layer_mask;
@@ -365,47 +318,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
-    if (keycode == TT(S_NAV2)) {
-//        uprintf("keycode == TT(S_NAV2), layer_state_is(S_NAV2): %d, pressed: %d\n", layer_state_is(S_NAV2), record->event.pressed);
-        // Assume that NAV2 layer is locked.
-        if (!layer_state_is(S_NAV2) && !record->event.pressed) {
-//            uprintf("S_NAV2 off -> on\n");
+    if (keycode == TT(S_NAV)) {
+        // Assume that NAV layer is locked.
+        if (!layer_state_is(S_NAV) && !record->event.pressed) {
             set_lock(LOCK_SHIFT, true);
-//            indicate();
         }
 
-        if (layer_state_is(S_NAV2) && record->event.pressed) {
-//            uprintf("S_NAV2 on -> off\n");
+        if (layer_state_is(S_NAV) && record->event.pressed) {
             set_lock(LOCK_SHIFT, false);
-//            indicate();
         }
 
         return true;
     }
-/*
-
-    if (keycode == KC_EXSEL && record->event.pressed) {
-        // KC_EXSEL is a dummy keycode, to implement Shift locking
-        // Assume that NAV2 layer is locked.
-        if (layer_state_is(S_NAV2)) {
-            layer_off(S_NAV2);
-            if (nav_loc_active) indicate(true, false);
-        } else {
-            layer_on(S_NAV2);
-            if (nav_loc_active) indicate(true, true);
-        }
-        return false;
-    }
-*/
 
     if (keycode == KC_ALT_ERASE) {
         // KC_ALT_ERASE is a dummy keycode, to indicate, that NAV locks must be cancelled
-        // Assume that NAV2 layer is locked.
-        layer_off(NAV2);
-        layer_off(S_NAV2);
+        // Assume that NAV layer is locked.
+        layer_off(NAV);
+        layer_off(S_NAV);
         set_lock(LOCK_NAV, false);
         set_lock(LOCK_SHIFT, false);
-//        indicate();
         return false;
     }
 
@@ -414,10 +346,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // In current layout, there is only one tap dance key: TD_RAISE
         if (record->event.pressed) {
             ql_tap_state.press_timestamp = record->event.time;
-//            uprintf("process_record_user PRESSED keycode=%04x t=%d\n", keycode, record->event.time);
         } else {
             ql_tap_state.release_timestamp = record->event.time;
-//            uprintf("process_record_user RELEASED keycode=%04x t=%d\n", keycode, record->event.time);
         }
     }
 
@@ -428,9 +358,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_LGUI);
     }
 
-    //    uprintf("process_record_user\n");
-//    uint8_t mod_state = get_mods();
-//    uprintf("mods=%02x keycode=%04x\n", mod_state, keycode);
     if (!process_case_modes(keycode, record)) {
         return false;
     }
@@ -444,36 +371,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed && is_oneshot_layer_active())
       clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
       return true;
-/*
-    case KC_SPACE:    //
-        uprintf("KC_SPACE\n");
-        if (mod_state == 8 && record->event.pressed) {
-          if (layer_state_is(RPE)) {
-            uprintf("russian off\n");
-            layer_off(RPE);
-          } else {
-            uprintf("russian on\n");
-            layer_on(RPE);
-          }
-        }
-        break;*/
-/*
-    case KC_SPACE:
-        uprintf("space\n");
-        uprintf("pressed: %d\n", record->event.pressed);
-        uprintf("MOD_BIT(KC_LGUI): %02x\n", MOD_BIT(KC_LGUI));
-        uprintf("(mod_state & MOD_BIT(KC_LGUI)) == MOD_BIT(KC_LGUI): %02x\n", (mod_state & MOD_BIT(KC_LGUI)) == MOD_BIT(KC_LGUI));
-        if (((mod_state & MOD_BIT(KC_LGUI)) == MOD_BIT(KC_LGUI) || (mod_state & MOD_BIT(KC_RGUI)) == MOD_BIT(KC_RGUI)) && record->event.pressed) {
-          if (layer_state_is(RUSSIAN)) {
-            uprintf("russian off\n");
-            layer_off(RUSSIAN);
-          } else {
-            uprintf("russian on\n");
-            layer_on(RUSSIAN);
-          }
-        }
-        break;
-*/
     }
 
     if (record->event.pressed) {
@@ -558,24 +455,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
-/*
-    if (is_turbo_active()) {
-        board_led_1_on();
-        layer_on(ENGRAM_T);
-        if (is_turbo_affected_key(keycode)) {
-            uint16_t simple_code = keycode & 0xFF;
-            if (record->event.pressed)
-                register_code(simple_code);
-            else
-                unregister_code(simple_code);
-            return false;
-        }
-    } else {
-        board_led_1_off();
-        layer_off(ENGRAM_T);
-    }
-*/
-
     if (record->event.pressed) {
         update_wpm(keycode);
     }
@@ -605,26 +484,20 @@ void backlight(void) {
     uint8_t leds = host_keyboard_leds() & (1U << USB_LED_CAPS_LOCK);
 
     if (new_layer_state != cur_layer_state || leds != cur_leds) {
-        uprintf("backlight$0 new_layer_state=%08x cur_layer_state=%08x leds=%02x cur_leds=%02x\n", (unsigned int)new_layer_state, (unsigned int)cur_layer_state, leds, cur_leds);
         switch (get_highest_layer(new_layer_state)) {
             case ENGRAM:
-                uprintf("backlight$100\n");
                 set_backlight_leds(0x00, 0x00, caps_byte_for(leds));
                 break;
             case QWERTY:
-                uprintf("backlight$200\n");
                 set_backlight_leds(0x80, bl_brightness, caps_byte_for(leds));
                 break;
             case RPE:
-                uprintf("backlight$300\n");
                 set_backlight_leds(bl_brightness, 0x00, caps_byte_for(leds));
                 break;
-            case NAV2:
-                uprintf("backlight$400\n");
+            case NAV:
                 set_backlight_leds(0x00, bl_brightness, 0x00);
                 break;
-            case S_NAV2:
-                uprintf("backlight$500\n");
+            case S_NAV:
                 set_backlight_leds(0x00, bl_brightness, bl_brightness);
                 break;
         }
@@ -650,7 +523,6 @@ void stopwatch(void) {
 
         if (stopwatch_start_ts == 1) {
             stopwatch_start_ts = 0;
-            uprintf("stopwatch$0\n");
             set_led_bars(0, 0);
             return;
         }
@@ -679,7 +551,6 @@ void stopwatch(void) {
                 pattern_g = pattern;
             }
 
-            uprintf("stopwatch$1 r=%04x g=%04x\n", pattern_r, pattern_g);
             set_led_bars(pattern_r, pattern_g);
         }
     }
